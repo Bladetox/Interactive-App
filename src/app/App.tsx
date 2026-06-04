@@ -11,16 +11,16 @@ import imgRectangle6546 from "./assests/365c8fc0f53d1bc2bad0988227099e87b4730cbc
 import imgRectangle6547 from "./assests/f286a5e73a18e796afd61d7b68c51addff2c69b6.png";
 
 // Import all page components
-import ProductListPage from './components/ProductListPage';
-import ProductDetailPage from './components/ProductDetailPage';
+import ProductListPage from './figma/ProductListPage';
+import ProductDetailPage from './figma/ProductDetailPage';
 import BasketPage from './components/BasketPage';
 import CheckoutPage from './components/CheckoutPage';
-import PaymentPage from './components/PaymentPage';
-import ConfirmationPage from './components/ConfirmationPage';
+import PaymentPage from './figma/PaymentPage';
+import ConfirmationPage from './figma/ConfirmationPage';
 import OrderConfirmationPage from './components/OrderConfirmationPage';
-import PlaceholderPage from './components/PlaceholderPage';
+import PlaceholderPage from './figma/PlaceholderPage';
 import AddToCartOverlay from './components/AddToCartOverlay';
-import Menu from './components/Menu';
+import Menu from './figma/Menu';
 
 // Enhanced product data with descriptions and locations
 const PRODUCTS = [
