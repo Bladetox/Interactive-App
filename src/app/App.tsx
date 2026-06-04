@@ -1,14 +1,14 @@
 import React, { useState, useMemo } from 'react';
-import imgRectangle6538 from "figma:asset/39a095c5219433210528f313f4db7ed09e8b6466.png";
-import imgRectangle6539 from "figma:asset/c7319cef2b86a8f71b6765b77a10caccb7fc8b83.png";
-import imgRectangle6540 from "figma:asset/1b41f753535d961cfbba08b0eb03a1902c09f7f3.png";
-import imgRectangle6541 from "figma:asset/07e73d3701b2c2cf9a8054b1b2606088545c1b53.png";
-import imgRectangle6542 from "figma:asset/345d9f75120e49e4b6f691447bccd48abfb67431.png";
-import imgRectangle6543 from "figma:asset/28818bcf637e7596ffec2602b44c1b407fe11cf9.png";
-import imgRectangle6544 from "figma:asset/d55ecea918fdfbe2d236a4386a73a981bf45f319.png";
-import imgRectangle6545 from "figma:asset/464f20b81f02057b5cc69adbc19fb20af709c271.png";
-import imgRectangle6546 from "figma:asset/365c8fc0f53d1bc2bad0988227099e87b4730cbc.png";
-import imgRectangle6547 from "figma:asset/f286a5e73a18e796afd61d7b68c51addff2c69b6.png";
+import imgRectangle6538 from "../assests/39a095c5219433210528f313f4db7ed09e8b6466.png";
+import imgRectangle6539 from "../assests/c7319cef2b86a8f71b6765b77a10caccb7fc8b83.png";
+import imgRectangle6540 from "../assests/1b41f753535d961cfbba08b0eb03a1902c09f7f3.png";
+import imgRectangle6541 from "../assests/07e73d3701b2c2cf9a8054b1b2606088545c1b53.png";
+import imgRectangle6542 from "../assests/345d9f75120e49e4b6f691447bccd48abfb67431.png";
+import imgRectangle6543 from "../assests/28818bcf637e7596ffec2602b44c1b407fe11cf9.png";
+import imgRectangle6544 from "../assests/d55ecea918fdfbe2d236a4386a73a981bf45f319.png";
+import imgRectangle6545 from "../assests/464f20b81f02057b5cc69adbc19fb20af709c271.png";
+import imgRectangle6546 from "../assests/365c8fc0f53d1bc2bad0988227099e87b4730cbc.png";
+import imgRectangle6547 from "../assests/f286a5e73a18e796afd61d7b68c51addff2c69b6.png";
 
 // Import all page components
 import ProductListPage from './components/ProductListPage';
@@ -68,409 +68,251 @@ const PRODUCTS = [
     farm: "Castelao Farms",
     images: [imgRectangle6542],
     isFavorite: false,
-    description: "Mild, sweet onions perfect for caramelizing or eating raw. Low in sulfur with a delicate, pleasant flavor.",
-    location: "Grown in Vidalia, GA by Castelao Farms",
+    description: "Mild, sweet onions perfect for caramelizing, grilling, or eating raw in salads and sandwiches.",
+    location: "Grown in Walla Walla, WA by Castelao Farms",
     dietary: ["VG", "GF", "DF"]
   },
   {
     id: 5,
-    name: "Raspberries",
-    price: "$3.99 pint",
-    priceValue: 3.99,
-    farm: "Bernal Growers",
+    name: "Radish",
+    price: "$1.99/bunch",
+    priceValue: 1.99,
+    farm: "Sunrise Valley Farm",
     images: [imgRectangle6543],
     isFavorite: false,
-    description: "Juicy, sweet-tart raspberries bursting with flavor. Rich in antioxidants and perfect for snacking or desserts.",
-    location: "Grown in Oregon by Bernal Growers",
+    description: "Crisp, peppery radishes with a satisfying crunch. Great for snacking, salads, or as a garnish.",
+    location: "Grown in Vermont by Sunrise Valley Farm",
     dietary: ["VG", "GF", "DF"]
   },
   {
     id: 6,
-    name: "Bananas",
-    price: "$0.64/lb",
-    priceValue: 0.64,
-    farm: "Lowry Farms",
+    name: "Celery",
+    price: "$1.49/bunch",
+    priceValue: 1.49,
+    farm: "Green Acres",
     images: [imgRectangle6544],
     isFavorite: false,
-    description: "Sweet, creamy bananas perfect for smoothies, baking, or eating fresh. A great source of potassium and natural energy.",
-    location: "Grown in Costa Rica by Lowry Farms",
+    description: "Fresh, crunchy celery stalks perfect for snacking, soups, or as a base for countless recipes.",
+    location: "Grown in Michigan by Green Acres",
     dietary: ["VG", "GF", "DF"]
   },
   {
     id: 7,
-    name: "Avocados",
-    price: "$1.05 each",
-    priceValue: 1.05,
-    farm: "Gonzalez Produce",
+    name: "Broccoli",
+    price: "$2.49/head",
+    priceValue: 2.49,
+    farm: "Pacific Coast Farms",
     images: [imgRectangle6545],
     isFavorite: false,
-    description: "Creamy, buttery avocados rich in healthy fats. Perfect for guacamole, toast, or adding to salads and smoothies.",
-    location: "Grown in Michoacán, Mexico by Gonzalez Produce",
+    description: "Fresh broccoli crowns packed with nutrients. Excellent steamed, roasted, or added to stir-fries.",
+    location: "Grown in Salinas, CA by Pacific Coast Farms",
     dietary: ["VG", "GF", "DF"]
   },
   {
     id: 8,
-    name: "Kale",
-    price: "$1.99 each",
-    priceValue: 1.99,
-    farm: "Green Growers",
+    name: "Tomato",
+    price: "$3.99/lb",
+    priceValue: 3.99,
+    farm: "Heritage Gardens",
     images: [imgRectangle6546],
     isFavorite: false,
-    description: "Nutrient-dense kale with a robust, earthy flavor. Excellent for salads, smoothies, or crispy kale chips.",
-    location: "Grown in California Central Valley by Green Growers",
+    description: "Vine-ripened heirloom tomatoes bursting with flavor. Perfect for salads, sauces, or enjoying fresh.",
+    location: "Grown in Sonoma, CA by Heritage Gardens",
     dietary: ["VG", "GF", "DF"]
   },
   {
     id: 9,
-    name: "Radish",
+    name: "Bell pepper",
     price: "$1.29 each",
     priceValue: 1.29,
-    farm: "Gonzalez Produce",
+    farm: "Desert Sun Farms",
     images: [imgRectangle6547],
     isFavorite: false,
-    description: "Crisp, peppery radishes with a fresh, clean bite. Great for salads, pickling, or as a crunchy snack.",
-    location: "Grown in San Diego County, CA by Gonzalez Produce",
+    description: "Sweet, colorful bell peppers with thick, crisp walls. Delicious raw, roasted, or stuffed.",
+    location: "Grown in New Mexico by Desert Sun Farms",
     dietary: ["VG", "GF", "DF"]
   }
 ];
 
-type SortOption = 'default' | 'a-z' | 'price';
-type ViewMode = 'list' | 'detail' | 'basket' | 'checkout' | 'payment' | 'confirmation' | 'orderConfirmation' | 'newsstand' | 'about' | 'profile';
+type Page = 'list' | 'detail' | 'basket' | 'checkout' | 'payment' | 'confirmation' | 'orderConfirmation' | 'placeholder';
 
 interface CartItem {
-  id: number;
-  name: string;
-  price: string;
-  priceValue: number;
-  image: string;
+  product: typeof PRODUCTS[0];
   quantity: number;
 }
 
-interface OverlayProduct {
-  id: number;
-  name: string;
-  image: string;
+interface Order {
+  items: CartItem[];
+  total: number;
+  deliveryMethod: string;
+  deliveryTime: string;
 }
 
-interface CustomerInfo {
-  fullName: string;
-  address: string;
-  city: string;
-  country: string;
-  state: string;
-  zipCode: string;
-}
-
-export default function App() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [favorites, setFavorites] = useState<Set<number>>(new Set());
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortOption, setSortOption] = useState<SortOption>('default');
-  const [isNavOpen, setIsNavOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+const App: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<Page>('list');
   const [selectedProduct, setSelectedProduct] = useState<typeof PRODUCTS[0] | null>(null);
-  
-  // Customer information from checkout
-  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
-    fullName: '',
-    address: '',
-    city: '',
-    country: '',
-    state: '',
-    zipCode: ''
-  });
-  
-  // Add to cart overlay state
-  const [showOverlay, setShowOverlay] = useState(false);
-  const [overlayProduct, setOverlayProduct] = useState<OverlayProduct | null>(null);
-  const [overlayQuantity, setOverlayQuantity] = useState(1);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [products, setProducts] = useState(PRODUCTS);
+  const [showAddToCart, setShowAddToCart] = useState(false);
+  const [addToCartProduct, setAddToCartProduct] = useState<typeof PRODUCTS[0] | null>(null);
+  const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const cartCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
+  const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + item.product.priceValue * item.quantity, 0), [cart]);
 
-  const filteredAndSortedProducts = useMemo(() => {
-    let filtered = PRODUCTS.filter(product =>
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    switch (sortOption) {
-      case 'a-z':
-        return filtered.sort((a, b) => a.name.localeCompare(b.name));
-      case 'price':
-        return filtered.sort((a, b) => a.priceValue - b.priceValue);
-      default:
-        return filtered;
-    }
-  }, [searchTerm, sortOption]);
-
-  const toggleFavorite = (productId: number) => {
-    const newFavorites = new Set(favorites);
-    if (newFavorites.has(productId)) {
-      newFavorites.delete(productId);
-    } else {
-      newFavorites.add(productId);
-    }
-    setFavorites(newFavorites);
-  };
-
-  const showAddToCartOverlay = (product: typeof PRODUCTS[0], quantity = 1) => {
-    setOverlayProduct({
-      id: product.id,
-      name: product.name,
-      image: product.images[0]
-    });
-    setOverlayQuantity(quantity);
-    setShowOverlay(true);
-
-    // Hide overlay after 1 second
-    setTimeout(() => {
-      setShowOverlay(false);
-    }, 1000);
-  };
-
-  const addToCart = (productId?: number, quantityToAdd = 1) => {
-    let targetProduct;
-    
-    if (productId) {
-      targetProduct = PRODUCTS.find(p => p.id === productId);
-    } else if (selectedProduct) {
-      targetProduct = selectedProduct;
-    }
-    
-    if (!targetProduct) return;
-
-    // Show overlay
-    showAddToCartOverlay(targetProduct, quantityToAdd);
-
-    setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === targetProduct.id);
-      
-      if (existingItem) {
-        return prevItems.map(item =>
-          item.id === targetProduct.id
-            ? { ...item, quantity: item.quantity + quantityToAdd }
-            : item
-        );
-      } else {
-        return [...prevItems, {
-          id: targetProduct.id,
-          name: targetProduct.name,
-          price: targetProduct.price,
-          priceValue: targetProduct.priceValue,
-          image: targetProduct.images[0],
-          quantity: quantityToAdd
-        }];
-      }
-    });
-  };
-
-  const updateCartItemQuantity = (productId: number, quantity: number) => {
-    if (quantity === 0) {
-      setCartItems(prevItems => prevItems.filter(item => item.id !== productId));
-    } else {
-      setCartItems(prevItems =>
-        prevItems.map(item =>
-          item.id === productId
-            ? { ...item, quantity }
-            : item
-        )
-      );
-    }
-  };
-
-  // Navigation handlers
   const handleProductClick = (product: typeof PRODUCTS[0]) => {
     setSelectedProduct(product);
-    setViewMode('detail');
+    setCurrentPage('detail');
   };
 
-  const handleBackToList = () => {
-    setViewMode('list');
-    setSelectedProduct(null);
-  };
-
-  const handleCartClick = () => {
-    setViewMode('basket');
-  };
-
-  const handleBackFromBasket = () => {
-    setViewMode('list');
-  };
-
-  const handleGoToCheckout = () => {
-    setViewMode('checkout');
-  };
-
-  const handleBackFromCheckout = () => {
-    setViewMode('basket');
-  };
-
-  const handleProceedToPayment = (customerData: CustomerInfo) => {
-    setCustomerInfo(customerData);
-    setViewMode('payment');
-  };
-
-  const handleBackFromPayment = () => {
-    setViewMode('checkout');
-  };
-
-  const handleProceedToConfirmation = () => {
-    setViewMode('confirmation');
-  };
-
-  const handleBackFromConfirmation = () => {
-    setViewMode('payment');
-  };
-
-  const handleCompletePurchase = () => {
-    // Show order confirmation and clear cart
-    setViewMode('orderConfirmation');
-    setCartItems([]);
-  };
-
-  const handleShopFromOrderConfirmation = () => {
-    setViewMode('list');
-    setSelectedProduct(null);
-    // Reset customer info for new order
-    setCustomerInfo({
-      fullName: '',
-      address: '',
-      city: '',
-      country: '',
-      state: '',
-      zipCode: ''
+  const handleAddToCart = (product: typeof PRODUCTS[0], quantity: number = 1) => {
+    setCart(prev => {
+      const existing = prev.find(item => item.product.id === product.id);
+      if (existing) {
+        return prev.map(item =>
+          item.product.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      }
+      return [...prev, { product, quantity }];
     });
+    setAddToCartProduct(product);
+    setShowAddToCart(true);
+    setTimeout(() => setShowAddToCart(false), 2000);
   };
 
-  const handleMenuNavigation = (screen: string) => {
-    setViewMode(screen as ViewMode);
-    setSelectedProduct(null);
+  const handleToggleFavorite = (productId: number) => {
+    setProducts(prev => prev.map(p =>
+      p.id === productId ? { ...p, isFavorite: !p.isFavorite } : p
+    ));
   };
 
-  // Render current view based on viewMode
-  const renderCurrentView = () => {
-    switch (viewMode) {
+  const handleUpdateQuantity = (productId: number, quantity: number) => {
+    if (quantity <= 0) {
+      setCart(prev => prev.filter(item => item.product.id !== productId));
+    } else {
+      setCart(prev => prev.map(item =>
+        item.product.id === productId ? { ...item, quantity } : item
+      ));
+    }
+  };
+
+  const handleRemoveItem = (productId: number) => {
+    setCart(prev => prev.filter(item => item.product.id !== productId));
+  };
+
+  const handleOrderComplete = (order: Order) => {
+    setCompletedOrder(order);
+    setCart([]);
+    setCurrentPage('orderConfirmation');
+  };
+
+  const renderPage = () => {
+    switch (currentPage) {
       case 'list':
         return (
           <ProductListPage
-            products={filteredAndSortedProducts}
-            favorites={favorites}
-            searchTerm={searchTerm}
-            sortOption={sortOption}
-            cartCount={cartCount}
-            onSearchChange={setSearchTerm}
-            onSortChange={setSortOption}
-            onToggleFavorite={toggleFavorite}
-            onAddToCart={(productId) => addToCart(productId, 1)}
+            products={products}
             onProductClick={handleProductClick}
-            onMenuClick={() => setIsNavOpen(true)}
-            onCartClick={handleCartClick}
+            onAddToCart={handleAddToCart}
+            onToggleFavorite={handleToggleFavorite}
+            cartCount={cartCount}
+            onBasketClick={() => setCurrentPage('basket')}
+            onMenuClick={() => setIsMenuOpen(true)}
           />
         );
-      
       case 'detail':
         return selectedProduct ? (
           <ProductDetailPage
             product={selectedProduct}
+            onBack={() => setCurrentPage('list')}
+            onAddToCart={handleAddToCart}
             cartCount={cartCount}
-            onBack={handleBackToList}
-            onAddToCart={(quantity) => addToCart(undefined, quantity)}
-            onMenuClick={() => setIsNavOpen(true)}
-            onCartClick={handleCartClick}
+            onBasketClick={() => setCurrentPage('basket')}
+            onMenuClick={() => setIsMenuOpen(true)}
           />
         ) : null;
-      
       case 'basket':
         return (
           <BasketPage
-            cartItems={cartItems}
-            onBack={handleBackFromBasket}
-            onMenuClick={() => setIsNavOpen(true)}
-            onUpdateQuantity={updateCartItemQuantity}
-            onGoToCheckout={handleGoToCheckout}
+            items={cart}
+            onBack={() => setCurrentPage('list')}
+            onUpdateQuantity={handleUpdateQuantity}
+            onRemoveItem={handleRemoveItem}
+            onCheckout={() => setCurrentPage('checkout')}
+            onMenuClick={() => setIsMenuOpen(true)}
           />
         );
-      
       case 'checkout':
         return (
           <CheckoutPage
-            cartCount={cartCount}
-            customerInfo={customerInfo}
-            onBack={handleBackFromCheckout}
-            onMenuClick={() => setIsNavOpen(true)}
-            onProceedToPayment={handleProceedToPayment}
+            items={cart}
+            cartTotal={cartTotal}
+            onBack={() => setCurrentPage('basket')}
+            onContinue={() => setCurrentPage('payment')}
+            onMenuClick={() => setIsMenuOpen(true)}
           />
         );
-      
       case 'payment':
         return (
           <PaymentPage
-            cartCount={cartCount}
-            onBack={handleBackFromPayment}
-            onMenuClick={() => setIsNavOpen(true)}
-            onProceedToConfirmation={handleProceedToConfirmation}
+            items={cart}
+            cartTotal={cartTotal}
+            onBack={() => setCurrentPage('checkout')}
+            onOrderComplete={handleOrderComplete}
+            onMenuClick={() => setIsMenuOpen(true)}
           />
         );
-      
       case 'confirmation':
         return (
           <ConfirmationPage
-            cartItems={cartItems}
-            cartCount={cartCount}
-            onBack={handleBackFromConfirmation}
-            onMenuClick={() => setIsNavOpen(true)}
-            onUpdateQuantity={updateCartItemQuantity}
-            onCompletePurchase={handleCompletePurchase}
+            onContinueShopping={() => setCurrentPage('list')}
+            onMenuClick={() => setIsMenuOpen(true)}
           />
         );
-      
       case 'orderConfirmation':
-        return (
+        return completedOrder ? (
           <OrderConfirmationPage
-            cartCount={0} // Cart is cleared after purchase
-            customerInfo={customerInfo}
-            onShop={handleShopFromOrderConfirmation}
-            onMenuClick={() => setIsNavOpen(true)}
+            order={completedOrder}
+            onContinueShopping={() => setCurrentPage('list')}
+            onMenuClick={() => setIsMenuOpen(true)}
           />
-        );
-      
-      case 'newsstand':
-      case 'about':
-      case 'profile':
+        ) : null;
+      case 'placeholder':
         return (
-          <PlaceholderPage 
-            title={viewMode === 'newsstand' ? 'Newsstand' : viewMode === 'about' ? 'Who we are' : 'My Profile'}
-            onBack={handleBackToList}
-            onMenuClick={() => setIsNavOpen(true)}
-            cartCount={cartCount}
+          <PlaceholderPage
+            onBack={() => setCurrentPage('list')}
+            onMenuClick={() => setIsMenuOpen(true)}
           />
         );
-      
       default:
         return null;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      {/* iPhone 16 Container */}
-      <div className="w-[393px] h-[852px] bg-[#ffffff] relative overflow-hidden rounded-[40px] shadow-2xl border-8 border-black">
-        
-        {renderCurrentView()}
-
-        {/* Add to Cart Overlay */}
+    <div className="app">
+      {renderPage()}
+      {showAddToCart && addToCartProduct && (
         <AddToCartOverlay
-          isVisible={showOverlay}
-          product={overlayProduct}
-          quantity={overlayQuantity}
+          product={addToCartProduct}
+          onClose={() => setShowAddToCart(false)}
         />
-
-        {/* Custom Menu */}
+      )}
+      {isMenuOpen && (
         <Menu
-          isOpen={isNavOpen}
-          onClose={() => setIsNavOpen(false)}
-          onNavigate={handleMenuNavigation}
+          onClose={() => setIsMenuOpen(false)}
+          onNavigate={(page: Page) => {
+            setIsMenuOpen(false);
+            setCurrentPage(page);
+          }}
+          cartCount={cartCount}
         />
-      </div>
+      )}
     </div>
   );
-}
+};
+
+export default App;
