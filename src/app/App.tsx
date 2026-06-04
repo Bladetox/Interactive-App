@@ -1,14 +1,14 @@
 import React, { useState, useMemo } from 'react';
-import imgRectangle6538 from "../assests/39a095c5219433210528f313f4db7ed09e8b6466.png";
-import imgRectangle6539 from "../assests/c7319cef2b86a8f71b6765b77a10caccb7fc8b83.png";
-import imgRectangle6540 from "../assests/1b41f753535d961cfbba08b0eb03a1902c09f7f3.png";
-import imgRectangle6541 from "../assests/07e73d3701b2c2cf9a8054b1b2606088545c1b53.png";
-import imgRectangle6542 from "../assests/345d9f75120e49e4b6f691447bccd48abfb67431.png";
-import imgRectangle6543 from "../assests/28818bcf637e7596ffec2602b44c1b407fe11cf9.png";
-import imgRectangle6544 from "../assests/d55ecea918fdfbe2d236a4386a73a981bf45f319.png";
-import imgRectangle6545 from "../assests/464f20b81f02057b5cc69adbc19fb20af709c271.png";
-import imgRectangle6546 from "../assests/365c8fc0f53d1bc2bad0988227099e87b4730cbc.png";
-import imgRectangle6547 from "../assests/f286a5e73a18e796afd61d7b68c51addff2c69b6.png";
+import imgRectangle6538 from "./assests/39a095c5219433210528f313f4db7ed09e8b6466.png";
+import imgRectangle6539 from "./assests/c7319cef2b86a8f71b6765b77a10caccb7fc8b83.png";
+import imgRectangle6540 from "./assests/1b41f753535d961cfbba08b0eb03a1902c09f7f3.png";
+import imgRectangle6541 from "./assests/07e73d3701b2c2cf9a8054b1b2606088545c1b53.png";
+import imgRectangle6542 from "./assests/345d9f75120e49e4b6f691447bccd48abfb67431.png";
+import imgRectangle6543 from "./assests/28818bcf637e7596ffec2602b44c1b407fe11cf9.png";
+import imgRectangle6544 from "./assests/d55ecea918fdfbe2d236a4386a73a981bf45f319.png";
+import imgRectangle6545 from "./assests/464f20b81f02057b5cc69adbc19fb20af709c271.png";
+import imgRectangle6546 from "./assests/365c8fc0f53d1bc2bad0988227099e87b4730cbc.png";
+import imgRectangle6547 from "./assests/f286a5e73a18e796afd61d7b68c51addff2c69b6.png";
 
 // Import all page components
 import ProductListPage from './components/ProductListPage';
