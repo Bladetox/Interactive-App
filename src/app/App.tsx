@@ -19,7 +19,7 @@ import PaymentPage from './figma/PaymentPage';
 import ConfirmationPage from './components/ConfirmationPage';
 import OrderConfirmationPage from './figma/OrderConfirmationPage';
 import PlaceholderPage from './figma/PlaceholderPage';
-import AddToCartOverlay from './figma/AddToCartOverlay';
+import AddToCartOverlay from './components/AddToCartOverlay';
 import Menu from './figma/Menu';
 
 // Enhanced product data with descriptions and locations
