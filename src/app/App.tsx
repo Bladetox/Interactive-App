@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import imgRectangle6538 from "./assests/39a095c5219433210528f313f4db7ed09e8b6466.png";
 import imgRectangle6539 from "./assests/c7319cef2b86a8f71b6765b77a10caccb7fc8b83.png";
 import imgRectangle6541 from "./assests/07e73d3701b2c2cf9a8054b1b2606088545c1b53.png";
@@ -21,6 +22,39 @@ import AddToCartOverlay from './components/AddToCartOverlay';
 import Menu from './figma/Menu';
 import { DEFAULT_DELIVERY, DeliveryOption } from './shared/deliveryTypes';
 
+// Page order used to infer slide direction
+const PAGE_ORDER: Page[] = [
+  'list', 'detail', 'basket', 'confirmation', 'checkout', 'payment', 'orderConfirmation'
+];
+
+const pageVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 60 : -60,
+    opacity: 0,
+    scale: 0.98,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+    transition: {
+      x: { type: 'spring' as const, stiffness: 350, damping: 35 },
+      opacity: { duration: 0.22 },
+      scale: { duration: 0.22 },
+    },
+  },
+  exit: (direction: number) => ({
+    x: direction < 0 ? 60 : -60,
+    opacity: 0,
+    scale: 0.98,
+    transition: {
+      x: { type: 'spring' as const, stiffness: 350, damping: 35 },
+      opacity: { duration: 0.18 },
+      scale: { duration: 0.18 },
+    },
+  }),
+};
+
 const PRODUCTS = [
   {
     id: 1,
@@ -30,7 +64,7 @@ const PRODUCTS = [
     farm: "Kunisaki Farms",
     images: [imgRectangle6538, imgRectangle6539],
     isFavorite: false,
-    description: "Bold, aromatic garlic cloves with a rich, complex flavor. Perfect for roasting, sautéing, or adding depth to any dish.",
+    description: "Bold, aromatic garlic cloves with a rich, complex flavor. Perfect for roasting, saut\u00e9ing, or adding depth to any dish.",
     location: "Grown in Gilroy, CA by Kunisaki Farms",
     dietary: ["VG", "GF", "DF"],
     category: "Vegetables"
@@ -157,6 +191,9 @@ interface Order {
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('list');
+  const [direction, setDirection] = useState(1);
+  const prevPageRef = useRef<Page>('list');
+
   const [selectedProduct, setSelectedProduct] = useState<typeof PRODUCTS[0] | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [products, setProducts] = useState(PRODUCTS);
@@ -180,9 +217,17 @@ const App: React.FC = () => {
     })),
   [cart]);
 
+  const navigate = (page: Page) => {
+    const fromIdx = PAGE_ORDER.indexOf(prevPageRef.current);
+    const toIdx = PAGE_ORDER.indexOf(page);
+    setDirection(toIdx >= fromIdx ? 1 : -1);
+    prevPageRef.current = page;
+    setCurrentPage(page);
+  };
+
   const handleProductClick = (product: typeof PRODUCTS[0]) => {
     setSelectedProduct(product);
-    setCurrentPage('detail');
+    navigate('detail');
   };
 
   const handleAddToCart = (product: typeof PRODUCTS[0], quantity: number = 1) => {
@@ -226,7 +271,7 @@ const App: React.FC = () => {
     setCompletedOrder(order);
     setCart([]);
     setSelectedDelivery(DEFAULT_DELIVERY);
-    setCurrentPage('orderConfirmation');
+    navigate('orderConfirmation');
   };
 
   const renderPage = () => {
@@ -239,7 +284,7 @@ const App: React.FC = () => {
             onAddToCart={handleAddToCart}
             onToggleFavorite={handleToggleFavorite}
             cartCount={cartCount}
-            onBasketClick={() => setCurrentPage('basket')}
+            onBasketClick={() => navigate('basket')}
             onMenuClick={() => setIsMenuOpen(true)}
           />
         );
@@ -247,10 +292,10 @@ const App: React.FC = () => {
         return selectedProduct ? (
           <ProductDetailPage
             product={selectedProduct}
-            onBack={() => setCurrentPage('list')}
+            onBack={() => navigate('list')}
             onAddToCart={handleAddToCart}
             cartCount={cartCount}
-            onCartClick={() => setCurrentPage('basket')}
+            onCartClick={() => navigate('basket')}
             onMenuClick={() => setIsMenuOpen(true)}
           />
         ) : null;
@@ -258,10 +303,10 @@ const App: React.FC = () => {
         return (
           <BasketPage
             items={cart}
-            onBack={() => setCurrentPage('list')}
+            onBack={() => navigate('list')}
             onUpdateQuantity={handleUpdateQuantity}
             onRemoveItem={handleRemoveItem}
-            onCheckout={() => setCurrentPage('confirmation')}
+            onCheckout={() => navigate('confirmation')}
             onMenuClick={() => setIsMenuOpen(true)}
           />
         );
@@ -270,10 +315,10 @@ const App: React.FC = () => {
           <ConfirmationPage
             cartItems={confirmationCartItems}
             cartCount={cartCount}
-            onBack={() => setCurrentPage('basket')}
+            onBack={() => navigate('basket')}
             onMenuClick={() => setIsMenuOpen(true)}
             onUpdateQuantity={handleUpdateQuantity}
-            onCompletePurchase={() => setCurrentPage('checkout')}
+            onCompletePurchase={() => navigate('checkout')}
           />
         );
       case 'checkout':
@@ -281,8 +326,8 @@ const App: React.FC = () => {
           <CheckoutPage
             items={cart}
             cartTotal={cartTotal}
-            onBack={() => setCurrentPage('confirmation')}
-            onContinue={() => setCurrentPage('payment')}
+            onBack={() => navigate('confirmation')}
+            onContinue={() => navigate('payment')}
             onMenuClick={() => setIsMenuOpen(true)}
             selectedDelivery={selectedDelivery}
             onDeliveryChange={setSelectedDelivery}
@@ -294,7 +339,7 @@ const App: React.FC = () => {
             items={cart}
             cartTotal={cartTotal}
             selectedDelivery={selectedDelivery}
-            onBack={() => setCurrentPage('checkout')}
+            onBack={() => navigate('checkout')}
             onOrderComplete={handleOrderComplete}
             onMenuClick={() => setIsMenuOpen(true)}
           />
@@ -303,14 +348,14 @@ const App: React.FC = () => {
         return completedOrder ? (
           <OrderConfirmationPage
             order={completedOrder}
-            onContinueShopping={() => setCurrentPage('list')}
+            onContinueShopping={() => navigate('list')}
             onMenuClick={() => setIsMenuOpen(true)}
           />
         ) : null;
       case 'placeholder':
         return (
           <PlaceholderPage
-            onBack={() => setCurrentPage('list')}
+            onBack={() => navigate('list')}
             onMenuClick={() => setIsMenuOpen(true)}
           />
         );
@@ -320,8 +365,26 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="app min-h-screen">
-      {renderPage()}
+    /*
+     * h-dvh: locks to viewport height (respects iOS dynamic toolbar)
+     * flex flex-col overflow-hidden: only the inner page scrolls,
+     * not the app shell — eliminates iOS bounce on the outer container
+     */
+    <div className="app h-dvh flex flex-col overflow-hidden bg-white">
+      <AnimatePresence mode="wait" custom={direction}>
+        <motion.div
+          key={currentPage}
+          custom={direction}
+          variants={pageVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          className="flex-1 overflow-y-auto"
+        >
+          {renderPage()}
+        </motion.div>
+      </AnimatePresence>
+
       {showAddToCart && addToCartProduct && (
         <AddToCartOverlay
           product={addToCartProduct}
@@ -333,7 +396,7 @@ const App: React.FC = () => {
           onClose={() => setIsMenuOpen(false)}
           onNavigate={(page: Page) => {
             setIsMenuOpen(false);
-            setCurrentPage(page);
+            navigate(page);
           }}
           cartCount={cartCount}
         />
