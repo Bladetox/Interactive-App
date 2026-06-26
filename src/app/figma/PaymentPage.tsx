@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Menu } from 'lucide-react';
 import { Input } from '../ui/input';
 
 interface PaymentPageProps {
@@ -10,7 +10,7 @@ interface PaymentPageProps {
   onMenuClick: () => void;
 }
 
-const PaymentPage: React.FC<PaymentPageProps> = ({ items, cartTotal, onBack, onOrderComplete }) => {
+const PaymentPage: React.FC<PaymentPageProps> = ({ items, cartTotal, onBack, onOrderComplete, onMenuClick }) => {
   const [cardNumber, setCardNumber] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvv, setCvv] = useState('');
@@ -33,6 +33,9 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ items, cartTotal, onBack, onO
           <ArrowLeft className="w-5 h-5" />
         </button>
         <h1 className="text-lg font-semibold">Payment</h1>
+        <button onClick={onMenuClick} className="ml-auto p-2 text-gray-700" aria-label="Open menu">
+          <Menu className="w-5 h-5" />
+        </button>
       </div>
 
       <form onSubmit={handleSubmit} className="px-4 space-y-4">

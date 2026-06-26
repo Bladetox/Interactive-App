@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowLeft, Trash2 } from 'lucide-react';
+import { ArrowLeft, Trash2, Menu } from 'lucide-react';
 import QuantityDropdown from '../figma/QuantityDropdown';
 
 interface BasketPageProps {
@@ -17,6 +17,7 @@ const BasketPage: React.FC<BasketPageProps> = ({
   onUpdateQuantity,
   onRemoveItem,
   onCheckout,
+  onMenuClick,
 }) => {
   const total = items.reduce((sum, item) => sum + item.product.priceValue * item.quantity, 0);
 
@@ -27,7 +28,12 @@ const BasketPage: React.FC<BasketPageProps> = ({
           <ArrowLeft className="w-5 h-5" />
         </button>
         <h1 className="text-lg font-semibold">My Basket</h1>
-        <span className="ml-auto text-sm text-gray-400">{items.length} items</span>
+        <div className="ml-auto flex items-center gap-1">
+          <span className="text-sm text-gray-400">{items.length} items</span>
+          <button onClick={onMenuClick} className="p-2 text-gray-700" aria-label="Open menu">
+            <Menu className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       {items.length === 0 ? (
