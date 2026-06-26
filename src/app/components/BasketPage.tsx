@@ -3,7 +3,7 @@ import { ArrowLeft, Trash2, Menu } from 'lucide-react';
 import QuantityDropdown from '../figma/QuantityDropdown';
 
 interface BasketPageProps {
-  items: { product: { id: number; name: string; price: string; priceValue: number; images: string[] }; quantity: number }[];
+  items: { product: { id: number; name: string; price: string; priceValue: number; emoji: string }; quantity: number }[];
   onBack: () => void;
   onUpdateQuantity: (productId: number, quantity: number) => void;
   onRemoveItem: (productId: number) => void;
@@ -23,7 +23,7 @@ const BasketPage: React.FC<BasketPageProps> = ({
 
   return (
     <div className="relative bg-white min-h-screen w-full max-w-[412px] mx-auto">
-      <div className="flex items-center gap-3 px-4 pt-14 pb-4">
+      <div className="flex items-center gap-3 px-4 pt-4 pb-4">
         <button onClick={onBack} className="p-2">
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -45,7 +45,9 @@ const BasketPage: React.FC<BasketPageProps> = ({
         <div className="px-4 space-y-3">
           {items.map(item => (
             <div key={item.product.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl">
-              <img src={item.product.images[0]} alt={item.product.name} className="w-16 h-16 object-cover rounded-xl" />
+              <div className="w-16 h-16 flex items-center justify-center bg-white rounded-xl text-4xl shrink-0">
+                {item.product.emoji}
+              </div>
               <div className="flex-1">
                 <p className="font-medium text-sm text-gray-800">{item.product.name}</p>
                 <p className="text-green-600 text-sm font-semibold">{item.product.price}</p>
@@ -64,7 +66,7 @@ const BasketPage: React.FC<BasketPageProps> = ({
           <div className="border-t pt-4">
             <div className="flex justify-between font-semibold text-lg mb-4">
               <span>Total</span>
-              <span>${total.toFixed(2)}</span>
+              <span>R{total.toFixed(2)}</span>
             </div>
             <button
               onClick={onCheckout}
