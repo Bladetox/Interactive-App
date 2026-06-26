@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { ShoppingBag, ShoppingBasket, RotateCcw, X, AlertTriangle } from 'lucide-react';
 
-const STORAGE_KEY = 'shopping_list_items';
-
 interface MenuProps {
   onClose: () => void;
   onNavigate: (page: any) => void;
@@ -14,8 +12,7 @@ const Menu: React.FC<MenuProps> = ({ onClose, onNavigate, cartCount, onReset }) 
   const [showConfirm, setShowConfirm] = useState(false);
 
   const handleReset = () => {
-    localStorage.removeItem(STORAGE_KEY);
-    onReset();
+    onReset();   // App handles localStorage + state
     onClose();
   };
 
@@ -23,7 +20,6 @@ const Menu: React.FC<MenuProps> = ({ onClose, onNavigate, cartCount, onReset }) 
     <div className="fixed inset-0 bg-black/50 z-50" onClick={onClose}>
       <div className="absolute left-0 top-0 bottom-0 w-72 bg-white shadow-xl flex flex-col" onClick={e => e.stopPropagation()}>
 
-        {/* Header */}
         <div className="flex items-center justify-between px-5 pt-12 pb-4 border-b border-gray-100">
           <h2 className="text-base font-semibold text-gray-800">Menu</h2>
           <button onClick={onClose} className="p-1.5 rounded-full hover:bg-gray-100">
@@ -31,7 +27,6 @@ const Menu: React.FC<MenuProps> = ({ onClose, onNavigate, cartCount, onReset }) 
           </button>
         </div>
 
-        {/* Nav */}
         <nav className="flex-1 px-4 py-4 space-y-1">
           <button onClick={() => onNavigate('list')}
             className="flex items-center gap-3 w-full text-left px-3 py-3 rounded-xl text-gray-700 hover:bg-gray-50 hover:text-green-600 transition-colors">
@@ -48,7 +43,6 @@ const Menu: React.FC<MenuProps> = ({ onClose, onNavigate, cartCount, onReset }) 
           </button>
         </nav>
 
-        {/* Footer — reset */}
         <div className="px-4 pb-8 border-t border-gray-100 pt-4">
           {!showConfirm ? (
             <button onClick={() => setShowConfirm(true)}
@@ -61,7 +55,7 @@ const Menu: React.FC<MenuProps> = ({ onClose, onNavigate, cartCount, onReset }) 
               <div className="flex items-start gap-2">
                 <AlertTriangle className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
                 <p className="text-xs text-red-700 leading-relaxed">
-                  This will remove all your custom items and restore the original list. This cannot be undone.
+                  This will remove all custom items and restore the original list. Cannot be undone.
                 </p>
               </div>
               <div className="flex gap-2">

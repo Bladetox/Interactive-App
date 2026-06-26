@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import ProductListPage from './figma/ProductListPage';
@@ -150,11 +150,22 @@ const App: React.FC = () => {
     if (!loading) localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
   }, [products, loading]);
 
-  const handleReset = useCallback(() => {
+  // navigate defined before any handler that uses it
+  const navigate = (page: Page) => {
+    const from = PAGE_ORDER.indexOf(prevPageRef.current);
+    const to = PAGE_ORDER.indexOf(page);
+    setDirection(to >= from ? 1 : -1);
+    prevPageRef.current = page;
+    setCurrentPage(page);
+  };
+
+  const handleReset = () => {
+    localStorage.removeItem(STORAGE_KEY);
     setProducts(INITIAL_PRODUCTS);
     setCart([]);
+    setIsMenuOpen(false);
     navigate('list');
-  }, []);
+  };
 
   const cartCount = useMemo(() => cart.reduce((sum, i) => sum + i.quantity, 0), [cart]);
   const cartTotal = useMemo(() => cart.reduce((sum, i) => sum + i.product.priceValue * i.quantity, 0), [cart]);
@@ -167,14 +178,6 @@ const App: React.FC = () => {
       image: i.product.emoji,
       quantity: i.quantity,
     })), [cart]);
-
-  const navigate = (page: Page) => {
-    const from = PAGE_ORDER.indexOf(prevPageRef.current);
-    const to = PAGE_ORDER.indexOf(page);
-    setDirection(to >= from ? 1 : -1);
-    prevPageRef.current = page;
-    setCurrentPage(page);
-  };
 
   const handleAddToCart = (product: Product, quantity: number = 1) => {
     setCart(prev => {
