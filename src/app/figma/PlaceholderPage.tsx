@@ -1,5 +1,4 @@
 import React from 'react';
-import StatusBar from '../shared/StatusBar';
 
 interface PlaceholderPageProps {
   onBack: () => void;
@@ -9,7 +8,6 @@ interface PlaceholderPageProps {
 const PlaceholderPage: React.FC<PlaceholderPageProps> = ({ onBack }) => {
   return (
     <div className="relative bg-white min-h-screen w-full max-w-[412px] mx-auto">
-      <StatusBar />
       <div className="flex flex-col items-center justify-center min-h-screen px-6 text-center">
         <div className="text-6xl mb-4">🚧</div>
         <h1 className="text-2xl font-bold text-gray-800 mb-2">Coming Soon</h1>
