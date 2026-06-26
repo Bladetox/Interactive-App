@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Heart, ShoppingBasket, Search, Menu } from 'lucide-react';
 import { Input } from '../ui/input';
-import StatusBar from '../shared/StatusBar';
 
 interface Product {
   id: number;
@@ -49,10 +48,9 @@ const ProductListPage: React.FC<ProductListPageProps> = ({
 
   return (
     <div className="relative bg-white min-h-screen w-full max-w-[412px] mx-auto">
-      <StatusBar />
 
       {/* Header */}
-      <div className="flex items-center justify-between px-4 pt-14 pb-2">
+      <div className="flex items-center justify-between px-4 pt-4 pb-2">
         <button onClick={onMenuClick} className="p-2">
           <Menu className="w-6 h-6 text-gray-700" />
         </button>
