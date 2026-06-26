@@ -13,9 +13,9 @@ import imgRectangle6547 from "./assests/f286a5e73a18e796afd61d7b68c51addff2c69b6
 import ProductListPage from './figma/ProductListPage';
 import ProductDetailPage from './figma/ProductDetailPage';
 import BasketPage from './components/BasketPage';
+import ConfirmationPage from './components/ConfirmationPage';
 import CheckoutPage from './components/CheckoutPage';
 import PaymentPage from './figma/PaymentPage';
-import ConfirmationPage from './components/ConfirmationPage';
 import OrderConfirmationPage from './figma/OrderConfirmationPage';
 import PlaceholderPage from './figma/PlaceholderPage';
 import AddToCartOverlay from './components/AddToCartOverlay';
@@ -142,7 +142,7 @@ const PRODUCTS = [
   }
 ];
 
-type Page = 'list' | 'detail' | 'basket' | 'checkout' | 'payment' | 'confirmation' | 'orderConfirmation' | 'placeholder';
+type Page = 'list' | 'detail' | 'basket' | 'confirmation' | 'checkout' | 'payment' | 'orderConfirmation' | 'placeholder';
 
 interface CartItem {
   product: typeof PRODUCTS[0];
@@ -169,6 +169,18 @@ const App: React.FC = () => {
 
   const cartCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
   const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + item.product.priceValue * item.quantity, 0), [cart]);
+
+  // Map CartItem[] into the shape ConfirmationPage expects
+  const confirmationCartItems = useMemo(() =>
+    cart.map(item => ({
+      id: item.product.id,
+      name: item.product.name,
+      price: item.product.price,
+      priceValue: item.product.priceValue,
+      image: item.product.images[0],
+      quantity: item.quantity,
+    })),
+  [cart]);
 
   const handleProductClick = (product: typeof PRODUCTS[0]) => {
     setSelectedProduct(product);
@@ -251,8 +263,21 @@ const App: React.FC = () => {
             onBack={() => setCurrentPage('list')}
             onUpdateQuantity={handleUpdateQuantity}
             onRemoveItem={handleRemoveItem}
-            onCheckout={() => setCurrentPage('checkout')}
+            // Basket "Checkout" now goes to cart review (ConfirmationPage) first
+            onCheckout={() => setCurrentPage('confirmation')}
             onMenuClick={() => setIsMenuOpen(true)}
+          />
+        );
+      case 'confirmation':
+        return (
+          <ConfirmationPage
+            cartItems={confirmationCartItems}
+            cartCount={cartCount}
+            onBack={() => setCurrentPage('basket')}
+            onMenuClick={() => setIsMenuOpen(true)}
+            onUpdateQuantity={handleUpdateQuantity}
+            // "Complete purchase" proceeds to address/delivery checkout
+            onCompletePurchase={() => setCurrentPage('checkout')}
           />
         );
       case 'checkout':
@@ -260,7 +285,7 @@ const App: React.FC = () => {
           <CheckoutPage
             items={cart}
             cartTotal={cartTotal}
-            onBack={() => setCurrentPage('basket')}
+            onBack={() => setCurrentPage('confirmation')}
             onContinue={() => setCurrentPage('payment')}
             onMenuClick={() => setIsMenuOpen(true)}
             selectedDelivery={selectedDelivery}
@@ -275,13 +300,6 @@ const App: React.FC = () => {
             selectedDelivery={selectedDelivery}
             onBack={() => setCurrentPage('checkout')}
             onOrderComplete={handleOrderComplete}
-            onMenuClick={() => setIsMenuOpen(true)}
-          />
-        );
-      case 'confirmation':
-        return (
-          <ConfirmationPage
-            onContinueShopping={() => setCurrentPage('list')}
             onMenuClick={() => setIsMenuOpen(true)}
           />
         );
