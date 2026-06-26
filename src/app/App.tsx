@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import imgRectangle6538 from "./assests/39a095c5219433210528f313f4db7ed09e8b6466.png";
 import imgRectangle6539 from "./assests/c7319cef2b86a8f71b6765b77a10caccb7fc8b83.png";
-import imgRectangle6540 from "./assests/1b41f753535d961cfbba08b0eb03a1902c09f7f3.png";
 import imgRectangle6541 from "./assests/07e73d3701b2c2cf9a8054b1b2606088545c1b53.png";
 import imgRectangle6542 from "./assests/345d9f75120e49e4b6f691447bccd48abfb67431.png";
 import imgRectangle6543 from "./assests/28818bcf637e7596ffec2602b44c1b407fe11cf9.png";
@@ -42,7 +41,7 @@ const PRODUCTS = [
     price: "$2.29/lb",
     priceValue: 2.29,
     farm: "Helmbolt Orchards",
-    images: [imgRectangle6540, imgRectangle6539],
+    images: [imgRectangle6539],
     isFavorite: false,
     description: "Crisp, sweet sugar snap peas with edible pods. Enjoy raw as a snack or lightly steamed to preserve their natural crunch.",
     location: "Grown in Salinas Valley, CA by Helmbolt Orchards",
@@ -321,7 +320,6 @@ const App: React.FC = () => {
   };
 
   return (
-    // min-h-screen ensures full-height children (size-full) resolve correctly
     <div className="app min-h-screen">
       {renderPage()}
       {showAddToCart && addToCartProduct && (
