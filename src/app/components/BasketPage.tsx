@@ -1,6 +1,5 @@
 import React from 'react';
 import { ArrowLeft, Trash2, Menu } from 'lucide-react';
-import QuantityDropdown from '../figma/QuantityDropdown';
 
 interface BasketPageProps {
   items: { product: { id: number; name: string; price: string; priceValue: number; emoji: string }; quantity: number }[];
@@ -45,25 +44,35 @@ const BasketPage: React.FC<BasketPageProps> = ({
         <div className="px-4 space-y-3">
           {items.map(item => (
             <div key={item.product.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl">
-              <div className="w-16 h-16 flex items-center justify-center bg-white rounded-xl text-4xl shrink-0">
+              <div className="w-14 h-14 flex items-center justify-center bg-white rounded-xl text-3xl shrink-0">
                 {item.product.emoji}
               </div>
-              <div className="flex-1">
-                <p className="font-medium text-sm text-gray-800">{item.product.name}</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-sm text-gray-800 truncate">{item.product.name}</p>
                 <p className="text-green-600 text-sm font-semibold">{item.product.price}</p>
-                <QuantityDropdown
-                  quantity={item.quantity}
-                  onDecrease={() => onUpdateQuantity(item.product.id, item.quantity - 1)}
-                  onIncrease={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
-                />
+                {/* Inline quantity controls — no QuantityDropdown dependency */}
+                <div className="flex items-center gap-2 mt-1">
+                  <button
+                    onClick={() => onUpdateQuantity(item.product.id, item.quantity - 1)}
+                    className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-100 text-sm"
+                  >−</button>
+                  <span className="text-sm w-5 text-center">{item.quantity}</span>
+                  <button
+                    onClick={() => onUpdateQuantity(item.product.id, item.quantity + 1)}
+                    className="w-6 h-6 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-100 text-sm"
+                  >+</button>
+                </div>
               </div>
-              <button onClick={() => onRemoveItem(item.product.id)} className="p-2 text-gray-400 hover:text-red-500">
-                <Trash2 className="w-4 h-4" />
-              </button>
+              <div className="flex flex-col items-end gap-2">
+                <button onClick={() => onRemoveItem(item.product.id)} className="p-1 text-gray-400 hover:text-red-500">
+                  <Trash2 className="w-4 h-4" />
+                </button>
+                <span className="text-xs text-gray-400">R{(item.product.priceValue * item.quantity).toFixed(2)}</span>
+              </div>
             </div>
           ))}
 
-          <div className="border-t pt-4">
+          <div className="border-t pt-4 pb-8">
             <div className="flex justify-between font-semibold text-lg mb-4">
               <span>Total</span>
               <span>R{total.toFixed(2)}</span>
