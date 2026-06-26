@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import ProductListPage from './figma/ProductListPage';
@@ -59,7 +59,7 @@ const pageVariants = {
 
 const STORAGE_KEY = 'shopping_list_items';
 
-const INITIAL_PRODUCTS: Product[] = [
+export const INITIAL_PRODUCTS: Product[] = [
   { id: 1, name: 'Coffee', price: 'R89.99', priceValue: 89.99, category: 'Miscellaneous', emoji: '☕', isFavorite: false },
   { id: 2, name: 'Chicken', price: 'R79.99', priceValue: 79.99, category: 'Meat', emoji: '🍗', isFavorite: false },
   { id: 3, name: 'Mince / Meat', price: 'R89.99', priceValue: 89.99, category: 'Meat', emoji: '🥩', isFavorite: false },
@@ -138,11 +138,8 @@ const App: React.FC = () => {
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
-      try {
-        setProducts(JSON.parse(saved));
-      } catch {
-        setProducts(INITIAL_PRODUCTS);
-      }
+      try { setProducts(JSON.parse(saved)); }
+      catch { setProducts(INITIAL_PRODUCTS); }
     } else {
       setProducts(INITIAL_PRODUCTS);
     }
@@ -152,6 +149,12 @@ const App: React.FC = () => {
   useEffect(() => {
     if (!loading) localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
   }, [products, loading]);
+
+  const handleReset = useCallback(() => {
+    setProducts(INITIAL_PRODUCTS);
+    setCart([]);
+    navigate('list');
+  }, []);
 
   const cartCount = useMemo(() => cart.reduce((sum, i) => sum + i.quantity, 0), [cart]);
   const cartTotal = useMemo(() => cart.reduce((sum, i) => sum + i.product.priceValue * i.quantity, 0), [cart]);
@@ -324,6 +327,7 @@ const App: React.FC = () => {
           onClose={() => setIsMenuOpen(false)}
           onNavigate={(page: Page) => { setIsMenuOpen(false); navigate(page); }}
           cartCount={cartCount}
+          onReset={handleReset}
         />
       )}
     </div>
