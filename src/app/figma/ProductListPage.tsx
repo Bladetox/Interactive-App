@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { ShoppingBasket, Search, Menu, Trash2, Plus, Pencil, X, Check } from 'lucide-react';
 import { Input } from '../ui/input';
 import type { Product } from '../App';
@@ -14,20 +14,38 @@ const EMOJI_OPTIONS = [
   '💆','🩹','🛒','📦','✨','🪣','🧯','🧪','🍱','🥪',
 ];
 
-export const CATEGORIES = ['All', 'Meat', 'Vegetables', 'Fruits', 'Spices', 'Toiletries', 'Cleaning', 'Miscellaneous'];
+export const BASE_CATEGORIES = ['Meat', 'Vegetables', 'Fruits', 'Spices', 'Toiletries', 'Cleaning', 'Miscellaneous'];
 
 interface ItemFormProps {
   initial: { name: string; price: string; category: string; emoji: string };
   submitLabel: string;
+  extraCategories: string[];
   onSubmit: (data: { name: string; priceValue: number; category: string; emoji: string }) => void;
   onClose: () => void;
 }
 
-function ItemForm({ initial, submitLabel, onSubmit, onClose }: ItemFormProps) {
+function ItemForm({ initial, submitLabel, extraCategories, onSubmit, onClose }: ItemFormProps) {
   const [name, setName] = useState(initial.name);
   const [price, setPrice] = useState(initial.price);
   const [category, setCategory] = useState(initial.category);
   const [emoji, setEmoji] = useState(initial.emoji);
+  const [showNewCat, setShowNewCat] = useState(false);
+  const [newCatInput, setNewCatInput] = useState('');
+
+  // Merge base + any extra categories already in the product list
+  const allCategories = useMemo(() => {
+    const merged = [...BASE_CATEGORIES];
+    extraCategories.forEach(c => { if (!merged.includes(c)) merged.push(c); });
+    return merged;
+  }, [extraCategories]);
+
+  const handleAddCategory = () => {
+    const trimmed = newCatInput.trim();
+    if (!trimmed) return;
+    setCategory(trimmed);
+    setShowNewCat(false);
+    setNewCatInput('');
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +56,7 @@ function ItemForm({ initial, submitLabel, onSubmit, onClose }: ItemFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Emoji picker */}
       <div>
         <p className="text-sm font-medium text-gray-700 mb-2">Emoji <span className="text-2xl ml-2">{emoji}</span></p>
         <div className="grid grid-cols-8 gap-1 max-h-48 overflow-y-auto rounded-xl border border-gray-100 p-2 bg-gray-50">
@@ -50,11 +69,13 @@ function ItemForm({ initial, submitLabel, onSubmit, onClose }: ItemFormProps) {
         </div>
       </div>
 
+      {/* Name */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
         <Input value={name} onChange={e => setName(e.target.value)} placeholder="e.g. Oat milk" required />
       </div>
 
+      {/* Price */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Price (ZAR)</label>
         <div className="relative">
@@ -63,16 +84,51 @@ function ItemForm({ initial, submitLabel, onSubmit, onClose }: ItemFormProps) {
         </div>
       </div>
 
+      {/* Category */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+        <div className="flex items-center justify-between mb-2">
+          <label className="text-sm font-medium text-gray-700">Category</label>
+          <button type="button" onClick={() => setShowNewCat(v => !v)}
+            className="text-xs text-green-600 font-medium flex items-center gap-1 hover:text-green-700">
+            <Plus className="w-3.5 h-3.5" />{showNewCat ? 'Cancel' : 'New category'}
+          </button>
+        </div>
+
+        {showNewCat && (
+          <div className="flex gap-2 mb-3">
+            <Input
+              value={newCatInput}
+              onChange={e => setNewCatInput(e.target.value)}
+              placeholder="e.g. Beverages"
+              className="flex-1"
+              onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), handleAddCategory())}
+              autoFocus
+            />
+            <button type="button" onClick={handleAddCategory}
+              className="px-3 py-2 bg-green-500 text-white rounded-xl text-sm font-semibold hover:bg-green-600">
+              Add
+            </button>
+          </div>
+        )}
+
         <div className="grid grid-cols-2 gap-2">
-          {CATEGORIES.filter(c => c !== 'All').map(cat => (
+          {allCategories.map(cat => (
             <button key={cat} type="button" onClick={() => setCategory(cat)}
-              className={`py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center justify-between px-3 ${category === cat ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+              className={`py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center justify-between px-3 ${
+                category === cat ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}>
               <span>{cat}</span>
               {category === cat && <Check className="w-4 h-4" />}
             </button>
           ))}
+          {/* Show the newly typed/selected category if it's not in the list yet */}
+          {category && !allCategories.includes(category) && (
+            <button type="button"
+              className="py-2.5 rounded-xl text-sm font-medium bg-green-500 text-white flex items-center justify-between px-3">
+              <span>{category}</span>
+              <Check className="w-4 h-4" />
+            </button>
+          )}
         </div>
       </div>
 
@@ -87,9 +143,10 @@ function ItemForm({ initial, submitLabel, onSubmit, onClose }: ItemFormProps) {
 interface AddItemModalProps {
   onClose: () => void;
   onAdd: (item: Omit<Product, 'id' | 'isFavorite'>) => void;
+  extraCategories: string[];
 }
 
-function AddItemModal({ onClose, onAdd }: AddItemModalProps) {
+function AddItemModal({ onClose, onAdd, extraCategories }: AddItemModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={onClose}>
       <div className="bg-white w-full max-w-[412px] rounded-t-3xl p-6 pb-8 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
@@ -100,6 +157,7 @@ function AddItemModal({ onClose, onAdd }: AddItemModalProps) {
         <ItemForm
           initial={{ name: '', price: '', category: 'Miscellaneous', emoji: '🛒' }}
           submitLabel="Save item"
+          extraCategories={extraCategories}
           onSubmit={({ name, priceValue, category, emoji }) => {
             onAdd({ name, price: `R${priceValue.toFixed(2)}`, priceValue, category, emoji });
             onClose();
@@ -115,9 +173,10 @@ interface EditItemModalProps {
   product: Product;
   onClose: () => void;
   onSave: (updated: Product) => void;
+  extraCategories: string[];
 }
 
-function EditItemModal({ product, onClose, onSave }: EditItemModalProps) {
+function EditItemModal({ product, onClose, onSave, extraCategories }: EditItemModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40" onClick={onClose}>
       <div className="bg-white w-full max-w-[412px] rounded-t-3xl p-6 pb-8 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
@@ -128,6 +187,7 @@ function EditItemModal({ product, onClose, onSave }: EditItemModalProps) {
         <ItemForm
           initial={{ name: product.name, price: product.priceValue.toString(), category: product.category, emoji: product.emoji }}
           submitLabel="Save changes"
+          extraCategories={extraCategories}
           onSubmit={({ name, priceValue, category, emoji }) => {
             onSave({ ...product, name, price: `R${priceValue.toFixed(2)}`, priceValue, category, emoji });
             onClose();
@@ -158,6 +218,17 @@ const ProductListPage: React.FC<ProductListPageProps> = ({ products, onAddToCart
   const [showAddModal, setShowAddModal] = useState(false);
   const [editTarget, setEditTarget] = useState<Product | null>(null);
 
+  // Derive all unique categories from the current product list (includes custom ones)
+  const allCategories = useMemo(() => {
+    const extra = products.map(p => p.category).filter(c => !BASE_CATEGORIES.includes(c));
+    return ['All', ...BASE_CATEGORIES, ...Array.from(new Set(extra))];
+  }, [products]);
+
+  // Extra categories = anything beyond the base set
+  const extraCategories = useMemo(() =>
+    Array.from(new Set(products.map(p => p.category).filter(c => !BASE_CATEGORIES.includes(c)))),
+    [products]);
+
   const filtered = products.filter(p => {
     const matchSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchCat = activeFilter === 'All' || p.category === activeFilter;
@@ -187,9 +258,13 @@ const ProductListPage: React.FC<ProductListPageProps> = ({ products, onAddToCart
         </div>
       </div>
 
+      {/* Filter bar — dynamically includes custom categories */}
       <div className="flex gap-2 px-4 pb-4 overflow-x-auto scrollbar-hide">
-        {CATEGORIES.map(cat => (
-          <button key={cat} onClick={() => setActiveFilter(cat)} className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors shrink-0 ${activeFilter === cat ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
+        {allCategories.map(cat => (
+          <button key={cat} onClick={() => setActiveFilter(cat)}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors shrink-0 ${
+              activeFilter === cat ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            }`}>
             {cat}
           </button>
         ))}
@@ -205,7 +280,11 @@ const ProductListPage: React.FC<ProductListPageProps> = ({ products, onAddToCart
           </div>
         ) : (
           filtered.map(product => (
-            <div key={product.id} className={`bg-white rounded-2xl shadow-sm border overflow-hidden transition-colors ${editMode ? 'border-amber-200 cursor-pointer active:bg-amber-50' : 'border-gray-100'}`} onClick={() => editMode && setEditTarget(product)}>
+            <div key={product.id}
+              className={`bg-white rounded-2xl shadow-sm border overflow-hidden transition-colors ${
+                editMode ? 'border-amber-200 cursor-pointer active:bg-amber-50' : 'border-gray-100'
+              }`}
+              onClick={() => editMode && setEditTarget(product)}>
               <div className="relative">
                 <div className="w-full h-28 flex items-center justify-center bg-gray-50 text-5xl select-none">{product.emoji}</div>
                 {editMode && (
@@ -230,10 +309,24 @@ const ProductListPage: React.FC<ProductListPageProps> = ({ products, onAddToCart
         )}
       </div>
 
-      {!editMode && <button onClick={() => setShowAddModal(true)} className="fixed bottom-6 right-1/2 translate-x-[190px] w-14 h-14 bg-green-500 rounded-full shadow-lg flex items-center justify-center hover:bg-green-600 z-40"><Plus className="w-7 h-7 text-white" /></button>}
+      {!editMode && (
+        <button onClick={() => setShowAddModal(true)}
+          className="fixed bottom-6 right-1/2 translate-x-[190px] w-14 h-14 bg-green-500 rounded-full shadow-lg flex items-center justify-center hover:bg-green-600 z-40">
+          <Plus className="w-7 h-7 text-white" />
+        </button>
+      )}
 
-      {showAddModal && <AddItemModal onClose={() => setShowAddModal(false)} onAdd={onAddProduct} />}
-      {editTarget && <EditItemModal product={editTarget} onClose={() => setEditTarget(null)} onSave={updated => { onUpdateProduct(updated); setEditTarget(null); }} />}
+      {showAddModal && (
+        <AddItemModal onClose={() => setShowAddModal(false)} onAdd={onAddProduct} extraCategories={extraCategories} />
+      )}
+      {editTarget && (
+        <EditItemModal
+          product={editTarget}
+          onClose={() => setEditTarget(null)}
+          onSave={updated => { onUpdateProduct(updated); setEditTarget(null); }}
+          extraCategories={extraCategories}
+        />
+      )}
     </div>
   );
 };
