@@ -1,11 +1,10 @@
 import React from 'react';
-import imgTomato from "../assests/39a095c5219433210528f313f4db7ed09e8b6466.png";
 
 interface AddToCartOverlayProps {
   product: {
     name: string;
     price: string;
-    images: string[];
+    emoji: string;
   };
   onClose: () => void;
 }
@@ -13,11 +12,9 @@ interface AddToCartOverlayProps {
 const AddToCartOverlay: React.FC<AddToCartOverlayProps> = ({ product, onClose }) => {
   return (
     <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white rounded-2xl shadow-lg p-4 flex items-center gap-3 w-[340px] z-50">
-      <img
-        src={product.images[0] || imgTomato}
-        alt={product.name}
-        className="w-12 h-12 object-cover rounded-xl"
-      />
+      <div className="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-xl text-3xl">
+        {product.emoji}
+      </div>
       <div className="flex-1">
         <p className="font-semibold text-sm text-gray-800">{product.name}</p>
         <p className="text-xs text-green-600">Added to basket</p>
