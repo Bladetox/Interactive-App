@@ -11,7 +11,6 @@ import AddToCartOverlay from './components/AddToCartOverlay';
 import Menu from './figma/Menu';
 import { DEFAULT_DELIVERY, DeliveryOption } from './shared/deliveryTypes';
 
-// ─ Types ──────────────────────────────────────────────────────────────────
 export type Page = 'list' | 'basket' | 'confirmation' | 'checkout' | 'payment' | 'orderConfirmation';
 
 export interface Product {
@@ -60,14 +59,75 @@ const pageVariants = {
 
 const STORAGE_KEY = 'shopping_list_items';
 
+const INITIAL_PRODUCTS: Product[] = [
+  { id: 1, name: 'Coffee', price: 'R89.99', priceValue: 89.99, category: 'Miscellaneous', emoji: '☕', isFavorite: false },
+  { id: 2, name: 'Chicken', price: 'R79.99', priceValue: 79.99, category: 'Meat', emoji: '🍗', isFavorite: false },
+  { id: 3, name: 'Mince / Meat', price: 'R89.99', priceValue: 89.99, category: 'Meat', emoji: '🥩', isFavorite: false },
+  { id: 4, name: 'Fresh cream', price: 'R24.99', priceValue: 24.99, category: 'Miscellaneous', emoji: '🥛', isFavorite: false },
+  { id: 5, name: 'Eggs', price: 'R39.99', priceValue: 39.99, category: 'Miscellaneous', emoji: '🥚', isFavorite: false },
+  { id: 6, name: 'Pasta', price: 'R19.99', priceValue: 19.99, category: 'Miscellaneous', emoji: '🍝', isFavorite: false },
+  { id: 7, name: 'Rice', price: 'R34.99', priceValue: 34.99, category: 'Miscellaneous', emoji: '🍚', isFavorite: false },
+  { id: 8, name: 'Bread', price: 'R18.99', priceValue: 18.99, category: 'Miscellaneous', emoji: '🍞', isFavorite: false },
+  { id: 9, name: 'Aromat', price: 'R29.99', priceValue: 29.99, category: 'Spices', emoji: '🧂', isFavorite: false },
+  { id: 10, name: 'Mayonnaise', price: 'R34.99', priceValue: 34.99, category: 'Miscellaneous', emoji: '🥫', isFavorite: false },
+  { id: 11, name: 'Peanut butter', price: 'R44.99', priceValue: 44.99, category: 'Miscellaneous', emoji: '🥜', isFavorite: false },
+  { id: 12, name: 'Spring onion', price: 'R9.99', priceValue: 9.99, category: 'Vegetables', emoji: '🧅', isFavorite: false },
+  { id: 13, name: 'Coriander', price: 'R9.99', priceValue: 9.99, category: 'Vegetables', emoji: '🌿', isFavorite: false },
+  { id: 14, name: 'Parsley', price: 'R9.99', priceValue: 9.99, category: 'Vegetables', emoji: '🌿', isFavorite: false },
+  { id: 15, name: 'Pepper corns', price: 'R24.99', priceValue: 24.99, category: 'Spices', emoji: '⚫', isFavorite: false },
+  { id: 16, name: 'Chillies', price: 'R14.99', priceValue: 14.99, category: 'Vegetables', emoji: '🌶️', isFavorite: false },
+  { id: 17, name: 'Coconut milk', price: 'R29.99', priceValue: 29.99, category: 'Miscellaneous', emoji: '🥥', isFavorite: false },
+  { id: 18, name: 'Stock cubes', price: 'R19.99', priceValue: 19.99, category: 'Spices', emoji: '🧊', isFavorite: false },
+  { id: 19, name: 'Brown onion spice', price: 'R24.99', priceValue: 24.99, category: 'Spices', emoji: '🧂', isFavorite: false },
+  { id: 20, name: 'Ground ginger spice', price: 'R24.99', priceValue: 24.99, category: 'Spices', emoji: '🫚', isFavorite: false },
+  { id: 21, name: 'Strawberry jam', price: 'R29.99', priceValue: 29.99, category: 'Fruits', emoji: '🍓', isFavorite: false },
+  { id: 22, name: 'Mushrooms', price: 'R24.99', priceValue: 24.99, category: 'Vegetables', emoji: '🍄', isFavorite: false },
+  { id: 23, name: 'Peppers', price: 'R19.99', priceValue: 19.99, category: 'Vegetables', emoji: '🫑', isFavorite: false },
+  { id: 24, name: 'Mixed fruit jam', price: 'R29.99', priceValue: 29.99, category: 'Fruits', emoji: '🍇', isFavorite: false },
+  { id: 25, name: 'Butter', price: 'R49.99', priceValue: 49.99, category: 'Miscellaneous', emoji: '🧈', isFavorite: false },
+  { id: 26, name: 'Noodles', price: 'R14.99', priceValue: 14.99, category: 'Miscellaneous', emoji: '🍜', isFavorite: false },
+  { id: 27, name: 'Water', price: 'R12.99', priceValue: 12.99, category: 'Miscellaneous', emoji: '💧', isFavorite: false },
+  { id: 28, name: 'Tuna', price: 'R24.99', priceValue: 24.99, category: 'Meat', emoji: '🐟', isFavorite: false },
+  { id: 29, name: 'Tinned fish', price: 'R19.99', priceValue: 19.99, category: 'Meat', emoji: '🐠', isFavorite: false },
+  { id: 30, name: 'Tomato paste', price: 'R14.99', priceValue: 14.99, category: 'Vegetables', emoji: '🍅', isFavorite: false },
+  { id: 31, name: 'Onions', price: 'R14.99', priceValue: 14.99, category: 'Vegetables', emoji: '🧅', isFavorite: false },
+  { id: 32, name: 'Potatoes', price: 'R24.99', priceValue: 24.99, category: 'Vegetables', emoji: '🥔', isFavorite: false },
+  { id: 33, name: 'Cheese', price: 'R59.99', priceValue: 59.99, category: 'Miscellaneous', emoji: '🧀', isFavorite: false },
+  { id: 34, name: 'Cooking oil', price: 'R44.99', priceValue: 44.99, category: 'Miscellaneous', emoji: '🫙', isFavorite: false },
+  { id: 35, name: 'Milk', price: 'R22.99', priceValue: 22.99, category: 'Miscellaneous', emoji: '🥛', isFavorite: false },
+  { id: 36, name: 'Drain cleaner', price: 'R34.99', priceValue: 34.99, category: 'Cleaning', emoji: '🧴', isFavorite: false },
+  { id: 37, name: 'Crushed chillies', price: 'R24.99', priceValue: 24.99, category: 'Spices', emoji: '🌶️', isFavorite: false },
+  { id: 38, name: 'Dry cook in sauce', price: 'R19.99', priceValue: 19.99, category: 'Spices', emoji: '🥫', isFavorite: false },
+  { id: 39, name: 'Stir fry veggies', price: 'R29.99', priceValue: 29.99, category: 'Vegetables', emoji: '🥦', isFavorite: false },
+  { id: 40, name: 'Mixed veggies', price: 'R24.99', priceValue: 24.99, category: 'Vegetables', emoji: '🥗', isFavorite: false },
+  { id: 41, name: 'Red kidney beans', price: 'R19.99', priceValue: 19.99, category: 'Vegetables', emoji: '🫘', isFavorite: false },
+  { id: 42, name: 'Red lentils', price: 'R24.99', priceValue: 24.99, category: 'Vegetables', emoji: '🫘', isFavorite: false },
+  { id: 43, name: 'Chicken liver', price: 'R34.99', priceValue: 34.99, category: 'Meat', emoji: '🍗', isFavorite: false },
+  { id: 44, name: 'Cigarettes', price: 'R49.99', priceValue: 49.99, category: 'Miscellaneous', emoji: '🚬', isFavorite: false },
+  { id: 45, name: 'Dishwashing sponges', price: 'R14.99', priceValue: 14.99, category: 'Cleaning', emoji: '🧽', isFavorite: false },
+  { id: 46, name: 'Sweet treat', price: 'R29.99', priceValue: 29.99, category: 'Miscellaneous', emoji: '🍬', isFavorite: false },
+  { id: 47, name: 'Shaving blades', price: 'R79.99', priceValue: 79.99, category: 'Toiletries', emoji: '🪒', isFavorite: false },
+  { id: 48, name: 'Nivea body cream', price: 'R69.99', priceValue: 69.99, category: 'Toiletries', emoji: '🧴', isFavorite: false },
+  { id: 49, name: 'Nivea men shower gel', price: 'R59.99', priceValue: 59.99, category: 'Toiletries', emoji: '🚿', isFavorite: false },
+  { id: 50, name: 'Nivea men deo spray', price: 'R54.99', priceValue: 54.99, category: 'Toiletries', emoji: '🫧', isFavorite: false },
+  { id: 51, name: 'Comfort laundry detergent', price: 'R89.99', priceValue: 89.99, category: 'Cleaning', emoji: '🧺', isFavorite: false },
+  { id: 52, name: 'OSH body wash', price: 'R49.99', priceValue: 49.99, category: 'Toiletries', emoji: '🛁', isFavorite: false },
+  { id: 53, name: 'Handwash', price: 'R34.99', priceValue: 34.99, category: 'Toiletries', emoji: '🧼', isFavorite: false },
+  { id: 54, name: 'Toilet paper', price: 'R54.99', priceValue: 54.99, category: 'Toiletries', emoji: '🧻', isFavorite: false },
+  { id: 55, name: 'Toothpaste', price: 'R34.99', priceValue: 34.99, category: 'Toiletries', emoji: '🪥', isFavorite: false },
+  { id: 56, name: 'Flushable wet wipes', price: 'R44.99', priceValue: 44.99, category: 'Toiletries', emoji: '🫧', isFavorite: false },
+  { id: 57, name: 'Handy Andy', price: 'R29.99', priceValue: 29.99, category: 'Cleaning', emoji: '🧹', isFavorite: false },
+  { id: 58, name: 'Cotton pads', price: 'R24.99', priceValue: 24.99, category: 'Toiletries', emoji: '🩹', isFavorite: false },
+  { id: 59, name: 'Curl product / Treatment', price: 'R89.99', priceValue: 89.99, category: 'Toiletries', emoji: '💆', isFavorite: false },
+  { id: 60, name: 'Head and Shoulders', price: 'R64.99', priceValue: 64.99, category: 'Toiletries', emoji: '🧴', isFavorite: false },
+];
+
 const App: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-
   const [currentPage, setCurrentPage] = useState<Page>('list');
   const [direction, setDirection] = useState(1);
   const prevPageRef = useRef<Page>('list');
-
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showAddToCart, setShowAddToCart] = useState(false);
   const [addToCartProduct, setAddToCartProduct] = useState<Product | null>(null);
@@ -75,36 +135,20 @@ const App: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedDelivery, setSelectedDelivery] = useState<DeliveryOption>(DEFAULT_DELIVERY);
 
-  // Load products: localStorage first, then prices.json seed
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
         setProducts(JSON.parse(saved));
-        setLoading(false);
-        return;
-      } catch {}
+      } catch {
+        setProducts(INITIAL_PRODUCTS);
+      }
+    } else {
+      setProducts(INITIAL_PRODUCTS);
     }
-    fetch(`${import.meta.env.BASE_URL}prices.json`)
-      .then(r => r.json())
-      .then((data: { items: Array<{ id: number; name: string; price: number; category: string; emoji: string }> }) => {
-        const mapped: Product[] = data.items.map(item => ({
-          id: item.id,
-          name: item.name,
-          price: `R${item.price.toFixed(2)}`,
-          priceValue: item.price,
-          category: item.category,
-          emoji: item.emoji,
-          isFavorite: false,
-        }));
-        setProducts(mapped);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(mapped));
-      })
-      .catch(() => setProducts([]))
-      .finally(() => setLoading(false));
+    setLoading(false);
   }, []);
 
-  // Persist products to localStorage on every change
   useEffect(() => {
     if (!loading) localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
   }, [products, loading]);
@@ -154,7 +198,6 @@ const App: React.FC = () => {
     navigate('orderConfirmation');
   };
 
-  // Product list management (add / delete / emoji update)
   const handleAddProduct = (newProduct: Omit<Product, 'id' | 'isFavorite'>) => {
     const id = Date.now();
     setProducts(prev => [...prev, { ...newProduct, id, isFavorite: false }]);
@@ -167,6 +210,12 @@ const App: React.FC = () => {
 
   const handleUpdateEmoji = (productId: number, emoji: string) => {
     setProducts(prev => prev.map(p => p.id === productId ? { ...p, emoji } : p));
+    setCart(prev => prev.map(i => i.product.id === productId ? { ...i, product: { ...i.product, emoji } } : i));
+  };
+
+  const handleUpdateProduct = (updated: Product) => {
+    setProducts(prev => prev.map(p => p.id === updated.id ? updated : p));
+    setCart(prev => prev.map(i => i.product.id === updated.id ? { ...i, product: updated } : i));
   };
 
   if (loading) {
@@ -187,6 +236,7 @@ const App: React.FC = () => {
             onDeleteProduct={handleDeleteProduct}
             onAddProduct={handleAddProduct}
             onUpdateEmoji={handleUpdateEmoji}
+            onUpdateProduct={handleUpdateProduct}
             cartCount={cartCount}
             onBasketClick={() => navigate('basket')}
             onMenuClick={() => setIsMenuOpen(true)}
