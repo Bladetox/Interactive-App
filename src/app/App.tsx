@@ -22,6 +22,21 @@ import AddToCartOverlay from './components/AddToCartOverlay';
 import Menu from './figma/Menu';
 import { DEFAULT_DELIVERY, DeliveryOption } from './shared/deliveryTypes';
 
+// ── Types declared first so PAGE_ORDER and pageVariants can reference them ──
+type Page = 'list' | 'detail' | 'basket' | 'confirmation' | 'checkout' | 'payment' | 'orderConfirmation' | 'placeholder';
+
+interface CartItem {
+  product: typeof PRODUCTS[0];
+  quantity: number;
+}
+
+interface Order {
+  items: CartItem[];
+  total: number;
+  deliveryMethod: string;
+  deliveryTime: string;
+}
+
 // Page order used to infer slide direction
 const PAGE_ORDER: Page[] = [
   'list', 'detail', 'basket', 'confirmation', 'checkout', 'payment', 'orderConfirmation'
@@ -174,20 +189,6 @@ const PRODUCTS = [
     category: "Fruits"
   }
 ];
-
-type Page = 'list' | 'detail' | 'basket' | 'confirmation' | 'checkout' | 'payment' | 'orderConfirmation' | 'placeholder';
-
-interface CartItem {
-  product: typeof PRODUCTS[0];
-  quantity: number;
-}
-
-interface Order {
-  items: CartItem[];
-  total: number;
-  deliveryMethod: string;
-  deliveryTime: string;
-}
 
 const App: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<Page>('list');
@@ -365,11 +366,6 @@ const App: React.FC = () => {
   };
 
   return (
-    /*
-     * h-dvh: locks to viewport height (respects iOS dynamic toolbar)
-     * flex flex-col overflow-hidden: only the inner page scrolls,
-     * not the app shell — eliminates iOS bounce on the outer container
-     */
     <div className="app h-dvh flex flex-col overflow-hidden bg-white">
       <AnimatePresence mode="wait" custom={direction}>
         <motion.div
