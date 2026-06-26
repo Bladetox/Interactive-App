@@ -14,6 +14,7 @@ interface Product {
   description: string;
   location: string;
   dietary: string[];
+  category: string;
 }
 
 interface ProductListPageProps {
@@ -40,9 +41,11 @@ const ProductListPage: React.FC<ProductListPageProps> = ({
 
   const filters = ['All', 'Vegetables', 'Fruits', 'Herbs', 'Roots'];
 
-  const filteredProducts = products.filter(p =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredProducts = products.filter(p => {
+    const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = activeFilter === 'All' || p.category === activeFilter;
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="relative bg-white min-h-screen w-full max-w-[412px] mx-auto">
@@ -96,46 +99,53 @@ const ProductListPage: React.FC<ProductListPageProps> = ({
 
       {/* Product Grid */}
       <div className="grid grid-cols-2 gap-3 px-4 pb-8">
-        {filteredProducts.map(product => (
-          <div
-            key={product.id}
-            className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
-          >
+        {filteredProducts.length === 0 ? (
+          <div className="col-span-2 flex flex-col items-center justify-center py-16 text-gray-400">
+            <p className="text-4xl mb-3">🥬</p>
+            <p className="text-sm">No products found</p>
+          </div>
+        ) : (
+          filteredProducts.map(product => (
             <div
-              className="relative cursor-pointer"
-              onClick={() => onProductClick(product)}
+              key={product.id}
+              className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
             >
-              <img
-                src={product.images[0]}
-                alt={product.name}
-                className="w-full h-36 object-cover"
-              />
-              <button
-                onClick={e => { e.stopPropagation(); onToggleFavorite(product.id); }}
-                className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow-sm"
+              <div
+                className="relative cursor-pointer"
+                onClick={() => onProductClick(product)}
               >
-                <Heart
-                  className={`w-4 h-4 ${
-                    product.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'
-                  }`}
+                <img
+                  src={product.images[0]}
+                  alt={product.name}
+                  className="w-full h-36 object-cover"
                 />
-              </button>
-            </div>
-            <div className="p-3">
-              <p className="font-medium text-gray-800 text-sm">{product.name}</p>
-              <p className="text-xs text-gray-400 mb-2">{product.farm}</p>
-              <div className="flex items-center justify-between">
-                <span className="text-green-600 font-semibold text-sm">{product.price}</span>
                 <button
-                  onClick={() => onAddToCart(product)}
-                  className="w-7 h-7 bg-green-500 rounded-full flex items-center justify-center text-white hover:bg-green-600"
+                  onClick={e => { e.stopPropagation(); onToggleFavorite(product.id); }}
+                  className="absolute top-2 right-2 p-1.5 bg-white rounded-full shadow-sm"
                 >
-                  +
+                  <Heart
+                    className={`w-4 h-4 ${
+                      product.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'
+                    }`}
+                  />
                 </button>
               </div>
+              <div className="p-3">
+                <p className="font-medium text-gray-800 text-sm">{product.name}</p>
+                <p className="text-xs text-gray-400 mb-2">{product.farm}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-green-600 font-semibold text-sm">{product.price}</span>
+                  <button
+                    onClick={() => onAddToCart(product)}
+                    className="w-7 h-7 bg-green-500 rounded-full flex items-center justify-center text-white hover:bg-green-600"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );

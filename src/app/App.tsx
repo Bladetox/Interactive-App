@@ -33,7 +33,8 @@ const PRODUCTS = [
     isFavorite: false,
     description: "Bold, aromatic garlic cloves with a rich, complex flavor. Perfect for roasting, sautéing, or adding depth to any dish.",
     location: "Grown in Gilroy, CA by Kunisaki Farms",
-    dietary: ["VG", "GF", "DF"]
+    dietary: ["VG", "GF", "DF"],
+    category: "Vegetables"
   },
   {
     id: 2,
@@ -45,7 +46,8 @@ const PRODUCTS = [
     isFavorite: false,
     description: "Crisp, sweet sugar snap peas with edible pods. Enjoy raw as a snack or lightly steamed to preserve their natural crunch.",
     location: "Grown in Salinas Valley, CA by Helmbolt Orchards",
-    dietary: ["VG", "GF", "DF"]
+    dietary: ["VG", "GF", "DF"],
+    category: "Vegetables"
   },
   {
     id: 3,
@@ -57,7 +59,8 @@ const PRODUCTS = [
     isFavorite: false,
     description: "Fresh, organic ginger root with a warm, spicy kick. Essential for Asian cooking and natural wellness remedies.",
     location: "Grown in Hawaii by Bui Farms",
-    dietary: ["VG", "GF", "DF"]
+    dietary: ["VG", "GF", "DF"],
+    category: "Roots"
   },
   {
     id: 4,
@@ -69,7 +72,8 @@ const PRODUCTS = [
     isFavorite: false,
     description: "Mild, sweet onions perfect for caramelizing, grilling, or eating raw in salads and sandwiches.",
     location: "Grown in Walla Walla, WA by Castelao Farms",
-    dietary: ["VG", "GF", "DF"]
+    dietary: ["VG", "GF", "DF"],
+    category: "Vegetables"
   },
   {
     id: 5,
@@ -81,7 +85,8 @@ const PRODUCTS = [
     isFavorite: false,
     description: "Crisp, peppery radishes with a satisfying crunch. Great for snacking, salads, or as a garnish.",
     location: "Grown in Vermont by Sunrise Valley Farm",
-    dietary: ["VG", "GF", "DF"]
+    dietary: ["VG", "GF", "DF"],
+    category: "Roots"
   },
   {
     id: 6,
@@ -93,7 +98,8 @@ const PRODUCTS = [
     isFavorite: false,
     description: "Fresh, crunchy celery stalks perfect for snacking, soups, or as a base for countless recipes.",
     location: "Grown in Michigan by Green Acres",
-    dietary: ["VG", "GF", "DF"]
+    dietary: ["VG", "GF", "DF"],
+    category: "Vegetables"
   },
   {
     id: 7,
@@ -105,7 +111,8 @@ const PRODUCTS = [
     isFavorite: false,
     description: "Fresh broccoli crowns packed with nutrients. Excellent steamed, roasted, or added to stir-fries.",
     location: "Grown in Salinas, CA by Pacific Coast Farms",
-    dietary: ["VG", "GF", "DF"]
+    dietary: ["VG", "GF", "DF"],
+    category: "Vegetables"
   },
   {
     id: 8,
@@ -117,7 +124,8 @@ const PRODUCTS = [
     isFavorite: false,
     description: "Vine-ripened heirloom tomatoes bursting with flavor. Perfect for salads, sauces, or enjoying fresh.",
     location: "Grown in Sonoma, CA by Heritage Gardens",
-    dietary: ["VG", "GF", "DF"]
+    dietary: ["VG", "GF", "DF"],
+    category: "Fruits"
   },
   {
     id: 9,
@@ -129,7 +137,8 @@ const PRODUCTS = [
     isFavorite: false,
     description: "Sweet, colorful bell peppers with thick, crisp walls. Delicious raw, roasted, or stuffed.",
     location: "Grown in New Mexico by Desert Sun Farms",
-    dietary: ["VG", "GF", "DF"]
+    dietary: ["VG", "GF", "DF"],
+    category: "Fruits"
   }
 ];
 
@@ -156,7 +165,6 @@ const App: React.FC = () => {
   const [addToCartProduct, setAddToCartProduct] = useState<typeof PRODUCTS[0] | null>(null);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // Delivery selection is lifted here so CheckoutPage and PaymentPage share the same value
   const [selectedDelivery, setSelectedDelivery] = useState<DeliveryOption>(DEFAULT_DELIVERY);
 
   const cartCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
@@ -207,7 +215,7 @@ const App: React.FC = () => {
   const handleOrderComplete = (order: Order) => {
     setCompletedOrder(order);
     setCart([]);
-    setSelectedDelivery(DEFAULT_DELIVERY); // reset delivery selection after order
+    setSelectedDelivery(DEFAULT_DELIVERY);
     setCurrentPage('orderConfirmation');
   };
 
