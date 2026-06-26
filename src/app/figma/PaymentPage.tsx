@@ -39,7 +39,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({
 
   return (
     <div className="relative bg-white min-h-screen w-full max-w-[412px] mx-auto">
-      <div className="flex items-center gap-3 px-4 pt-14 pb-4">
+      <div className="flex items-center gap-3 px-4 pt-4 pb-4">
         <button onClick={onBack} className="p-2">
           <ArrowLeft className="w-5 h-5" />
         </button>
@@ -72,7 +72,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({
         <div className="border-t pt-4 space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">Subtotal</span>
-            <span>${cartTotal.toFixed(2)}</span>
+            <span>R{cartTotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-500">{selectedDelivery.label} Delivery</span>
@@ -80,7 +80,7 @@ const PaymentPage: React.FC<PaymentPageProps> = ({
           </div>
           <div className="flex justify-between font-semibold">
             <span>Total</span>
-            <span>${orderTotal.toFixed(2)}</span>
+            <span>R{orderTotal.toFixed(2)}</span>
           </div>
         </div>
 

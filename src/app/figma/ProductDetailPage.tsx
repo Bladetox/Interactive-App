@@ -1,17 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ShoppingBasket, Menu } from 'lucide-react';
-
-interface Product {
-  id: number;
-  name: string;
-  price: string;
-  priceValue: number;
-  farm: string;
-  images: string[];
-  description: string;
-  location: string;
-  dietary: string[];
-}
+import { categoryEmoji, defaultEmoji } from '../shared/categoryEmoji';
+import type { Product } from '../App';
 
 interface ProductDetailPageProps {
   product: Product;
@@ -31,7 +21,6 @@ export default function ProductDetailPage({
   onCartClick,
 }: ProductDetailPageProps) {
   const [quantity, setQuantity] = useState(1);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showQuantityDropdown, setShowQuantityDropdown] = useState(false);
 
   return (
@@ -39,11 +28,11 @@ export default function ProductDetailPage({
 
       {/* Header */}
       <div className="sticky top-0 z-10 bg-white border-b border-gray-100 shadow-sm">
-        <div className="flex items-center justify-between px-4 pt-12 pb-3">
+        <div className="flex items-center justify-between px-4 pt-4 pb-3">
           <button onClick={onMenuClick} className="p-2 text-gray-700" aria-label="Open menu">
             <Menu className="w-6 h-6" />
           </button>
-          <h1 className="text-lg font-semibold text-[#426b1f]">World Peas</h1>
+          <h1 className="text-lg font-semibold text-[#426b1f]">Shopping List</h1>
           <button onClick={onCartClick} className="relative p-2">
             <ShoppingBasket className="w-6 h-6 text-gray-700" />
             {cartCount > 0 && (
@@ -54,7 +43,7 @@ export default function ProductDetailPage({
           </button>
         </div>
         <div className="flex items-center justify-between px-4 pb-3">
-          <h2 className="text-2xl font-['Newsreader:Regular',_sans-serif] tracking-tight text-gray-900">{product.name}</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-gray-900">{product.name}</h2>
           <button
             onClick={onBack}
             className="flex items-center gap-1 text-[#426b1f] text-sm"
@@ -65,53 +54,22 @@ export default function ProductDetailPage({
         </div>
       </div>
 
-      {/* Product Image */}
-      <div className="relative w-full h-[300px] shrink-0">
-        <img
-          src={product.images[currentImageIndex]}
-          alt={product.name}
-          className="w-full h-full object-cover"
-        />
-        {product.images.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-            {product.images.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentImageIndex(i)}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  i === currentImageIndex ? 'bg-white' : 'bg-white/50'
-                }`}
-              />
-            ))}
-          </div>
-        )}
+      {/* Emoji hero */}
+      <div className="w-full h-[240px] flex items-center justify-center bg-gray-50 text-8xl select-none">
+        {categoryEmoji[product.name] ?? defaultEmoji}
       </div>
 
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto px-6 py-6 pb-32 space-y-5">
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto px-6 py-6 pb-32 space-y-4">
         <div>
-          <p className="text-lg font-semibold text-[#426b1f]">{product.price}</p>
-          <p className="text-sm text-gray-500 mt-1">{product.farm}</p>
+          <p className="text-2xl font-bold text-[#426b1f]">{product.price}</p>
+          <p className="text-sm text-gray-400 mt-1">{product.category}</p>
         </div>
-
-        {product.dietary.length > 0 && (
-          <div className="flex gap-2">
-            {product.dietary.map(tag => (
-              <span key={tag} className="px-2 py-1 text-xs bg-green-50 text-green-700 rounded-full border border-green-200">
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        <p className="text-sm text-gray-700 leading-relaxed">{product.description}</p>
-        <p className="text-sm text-gray-400 leading-relaxed">{product.location}</p>
       </div>
 
       {/* Sticky Footer */}
       <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[412px] bg-white border-t border-gray-100 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-6 py-4">
         <div className="flex items-center gap-4">
-          {/* Quantity selector */}
           <div className="relative">
             <button
               onClick={() => setShowQuantityDropdown(!showQuantityDropdown)}
@@ -136,8 +94,6 @@ export default function ProductDetailPage({
               </div>
             )}
           </div>
-
-          {/* Add to basket */}
           <button
             onClick={() => onAddToCart(product, quantity)}
             className="flex-1 bg-[#426b1f] text-white rounded-lg py-3 text-sm font-medium flex items-center justify-between px-5 hover:bg-[#365617] transition-colors"

@@ -1,14 +1,5 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import imgRectangle6538 from "./assests/39a095c5219433210528f313f4db7ed09e8b6466.png";
-import imgRectangle6539 from "./assests/c7319cef2b86a8f71b6765b77a10caccb7fc8b83.png";
-import imgRectangle6541 from "./assests/07e73d3701b2c2cf9a8054b1b2606088545c1b53.png";
-import imgRectangle6542 from "./assests/345d9f75120e49e4b6f691447bccd48abfb67431.png";
-import imgRectangle6543 from "./assests/28818bcf637e7596ffec2602b44c1b407fe11cf9.png";
-import imgRectangle6544 from "./assests/d55ecea918fdfbe2d236a4386a73a981bf45f319.png";
-import imgRectangle6545 from "./assests/464f20b81f02057b5cc69adbc19fb20af709c271.png";
-import imgRectangle6546 from "./assests/365c8fc0f53d1bc2bad0988227099e87b4730cbc.png";
-import imgRectangle6547 from "./assests/f286a5e73a18e796afd61d7b68c51addff2c69b6.png";
 
 import ProductListPage from './figma/ProductListPage';
 import ProductDetailPage from './figma/ProductDetailPage';
@@ -21,23 +12,38 @@ import PlaceholderPage from './figma/PlaceholderPage';
 import AddToCartOverlay from './components/AddToCartOverlay';
 import Menu from './figma/Menu';
 import { DEFAULT_DELIVERY, DeliveryOption } from './shared/deliveryTypes';
+import { categoryEmoji, defaultEmoji } from './shared/categoryEmoji';
 
-// ── Types declared first so PAGE_ORDER and pageVariants can reference them ──
-type Page = 'list' | 'detail' | 'basket' | 'confirmation' | 'checkout' | 'payment' | 'orderConfirmation' | 'placeholder';
+// ── Types ──────────────────────────────────────────────────────────────────
+export type Page = 'list' | 'detail' | 'basket' | 'confirmation' | 'checkout' | 'payment' | 'orderConfirmation' | 'placeholder';
 
-interface CartItem {
-  product: typeof PRODUCTS[0];
+export interface Product {
+  id: number;
+  name: string;
+  price: string;
+  priceValue: number;
+  category: string;
+  available: boolean;
+  images: string[];
+  isFavorite: boolean;
+  description: string;
+  location: string;
+  dietary: string[];
+}
+
+export interface CartItem {
+  product: Product;
   quantity: number;
 }
 
-interface Order {
+export interface Order {
   items: CartItem[];
   total: number;
   deliveryMethod: string;
   deliveryTime: string;
 }
 
-// Page order used to infer slide direction
+// ── Page transition helpers ────────────────────────────────────────────────
 const PAGE_ORDER: Page[] = [
   'list', 'detail', 'basket', 'confirmation', 'checkout', 'payment', 'orderConfirmation'
 ];
@@ -70,139 +76,46 @@ const pageVariants = {
   }),
 };
 
-const PRODUCTS = [
-  {
-    id: 1,
-    name: "Garlic clove",
-    price: "$0.89 each",
-    priceValue: 0.89,
-    farm: "Kunisaki Farms",
-    images: [imgRectangle6538, imgRectangle6539],
-    isFavorite: false,
-    description: "Bold, aromatic garlic cloves with a rich, complex flavor. Perfect for roasting, saut\u00e9ing, or adding depth to any dish.",
-    location: "Grown in Gilroy, CA by Kunisaki Farms",
-    dietary: ["VG", "GF", "DF"],
-    category: "Vegetables"
-  },
-  {
-    id: 2,
-    name: "Sugar snap pea",
-    price: "$2.29/lb",
-    priceValue: 2.29,
-    farm: "Helmbolt Orchards",
-    images: [imgRectangle6539],
-    isFavorite: false,
-    description: "Crisp, sweet sugar snap peas with edible pods. Enjoy raw as a snack or lightly steamed to preserve their natural crunch.",
-    location: "Grown in Salinas Valley, CA by Helmbolt Orchards",
-    dietary: ["VG", "GF", "DF"],
-    category: "Vegetables"
-  },
-  {
-    id: 3,
-    name: "Ginger",
-    price: "$4.20/lb",
-    priceValue: 4.20,
-    farm: "Bui Farms",
-    images: [imgRectangle6541],
-    isFavorite: false,
-    description: "Fresh, organic ginger root with a warm, spicy kick. Essential for Asian cooking and natural wellness remedies.",
-    location: "Grown in Hawaii by Bui Farms",
-    dietary: ["VG", "GF", "DF"],
-    category: "Roots"
-  },
-  {
-    id: 4,
-    name: "Sweet onion",
-    price: "$0.39/lb",
-    priceValue: 0.39,
-    farm: "Castelao Farms",
-    images: [imgRectangle6542],
-    isFavorite: false,
-    description: "Mild, sweet onions perfect for caramelizing, grilling, or eating raw in salads and sandwiches.",
-    location: "Grown in Walla Walla, WA by Castelao Farms",
-    dietary: ["VG", "GF", "DF"],
-    category: "Vegetables"
-  },
-  {
-    id: 5,
-    name: "Radish",
-    price: "$1.99/bunch",
-    priceValue: 1.99,
-    farm: "Sunrise Valley Farm",
-    images: [imgRectangle6543],
-    isFavorite: false,
-    description: "Crisp, peppery radishes with a satisfying crunch. Great for snacking, salads, or as a garnish.",
-    location: "Grown in Vermont by Sunrise Valley Farm",
-    dietary: ["VG", "GF", "DF"],
-    category: "Roots"
-  },
-  {
-    id: 6,
-    name: "Celery",
-    price: "$1.49/bunch",
-    priceValue: 1.49,
-    farm: "Green Acres",
-    images: [imgRectangle6544],
-    isFavorite: false,
-    description: "Fresh, crunchy celery stalks perfect for snacking, soups, or as a base for countless recipes.",
-    location: "Grown in Michigan by Green Acres",
-    dietary: ["VG", "GF", "DF"],
-    category: "Vegetables"
-  },
-  {
-    id: 7,
-    name: "Broccoli",
-    price: "$2.49/head",
-    priceValue: 2.49,
-    farm: "Pacific Coast Farms",
-    images: [imgRectangle6545],
-    isFavorite: false,
-    description: "Fresh broccoli crowns packed with nutrients. Excellent steamed, roasted, or added to stir-fries.",
-    location: "Grown in Salinas, CA by Pacific Coast Farms",
-    dietary: ["VG", "GF", "DF"],
-    category: "Vegetables"
-  },
-  {
-    id: 8,
-    name: "Tomato",
-    price: "$3.99/lb",
-    priceValue: 3.99,
-    farm: "Heritage Gardens",
-    images: [imgRectangle6546],
-    isFavorite: false,
-    description: "Vine-ripened heirloom tomatoes bursting with flavor. Perfect for salads, sauces, or enjoying fresh.",
-    location: "Grown in Sonoma, CA by Heritage Gardens",
-    dietary: ["VG", "GF", "DF"],
-    category: "Fruits"
-  },
-  {
-    id: 9,
-    name: "Bell pepper",
-    price: "$1.29 each",
-    priceValue: 1.29,
-    farm: "Desert Sun Farms",
-    images: [imgRectangle6547],
-    isFavorite: false,
-    description: "Sweet, colorful bell peppers with thick, crisp walls. Delicious raw, roasted, or stuffed.",
-    location: "Grown in New Mexico by Desert Sun Farms",
-    dietary: ["VG", "GF", "DF"],
-    category: "Fruits"
-  }
-];
-
+// ── App ────────────────────────────────────────────────────────────────────
 const App: React.FC = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [currentPage, setCurrentPage] = useState<Page>('list');
   const [direction, setDirection] = useState(1);
   const prevPageRef = useRef<Page>('list');
 
-  const [selectedProduct, setSelectedProduct] = useState<typeof PRODUCTS[0] | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [products, setProducts] = useState(PRODUCTS);
   const [showAddToCart, setShowAddToCart] = useState(false);
-  const [addToCartProduct, setAddToCartProduct] = useState<typeof PRODUCTS[0] | null>(null);
+  const [addToCartProduct, setAddToCartProduct] = useState<Product | null>(null);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedDelivery, setSelectedDelivery] = useState<DeliveryOption>(DEFAULT_DELIVERY);
+
+  // Fetch prices.json at runtime
+  useEffect(() => {
+    fetch(`${import.meta.env.BASE_URL}prices.json`)
+      .then(r => r.json())
+      .then((data: { items: Array<{ id: number; name: string; price: number; category: string; available: boolean }> }) => {
+        const mapped: Product[] = data.items.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: `R${item.price.toFixed(2)}`,
+          priceValue: item.price,
+          category: item.category,
+          available: item.available,
+          images: [],
+          isFavorite: false,
+          description: '',
+          location: '',
+          dietary: [],
+        }));
+        setProducts(mapped);
+      })
+      .catch(() => setProducts([]))
+      .finally(() => setLoading(false));
+  }, []);
 
   const cartCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
   const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + item.product.priceValue * item.quantity, 0), [cart]);
@@ -213,7 +126,7 @@ const App: React.FC = () => {
       name: item.product.name,
       price: item.product.price,
       priceValue: item.product.priceValue,
-      image: item.product.images[0],
+      image: categoryEmoji[item.product.name] ?? defaultEmoji,
       quantity: item.quantity,
     })),
   [cart]);
@@ -226,12 +139,12 @@ const App: React.FC = () => {
     setCurrentPage(page);
   };
 
-  const handleProductClick = (product: typeof PRODUCTS[0]) => {
+  const handleProductClick = (product: Product) => {
     setSelectedProduct(product);
     navigate('detail');
   };
 
-  const handleAddToCart = (product: typeof PRODUCTS[0], quantity: number = 1) => {
+  const handleAddToCart = (product: Product, quantity: number = 1) => {
     setCart(prev => {
       const existing = prev.find(item => item.product.id === product.id);
       if (existing) {
@@ -274,6 +187,14 @@ const App: React.FC = () => {
     setSelectedDelivery(DEFAULT_DELIVERY);
     navigate('orderConfirmation');
   };
+
+  if (loading) {
+    return (
+      <div className="h-dvh flex items-center justify-center bg-white">
+        <p className="text-gray-400 text-sm">Loading...</p>
+      </div>
+    );
+  }
 
   const renderPage = () => {
     switch (currentPage) {
