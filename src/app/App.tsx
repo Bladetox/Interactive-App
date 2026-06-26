@@ -170,7 +170,6 @@ const App: React.FC = () => {
   const cartCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
   const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + item.product.priceValue * item.quantity, 0), [cart]);
 
-  // Map CartItem[] into the shape ConfirmationPage expects
   const confirmationCartItems = useMemo(() =>
     cart.map(item => ({
       id: item.product.id,
@@ -263,7 +262,6 @@ const App: React.FC = () => {
             onBack={() => setCurrentPage('list')}
             onUpdateQuantity={handleUpdateQuantity}
             onRemoveItem={handleRemoveItem}
-            // Basket "Checkout" now goes to cart review (ConfirmationPage) first
             onCheckout={() => setCurrentPage('confirmation')}
             onMenuClick={() => setIsMenuOpen(true)}
           />
@@ -276,7 +274,6 @@ const App: React.FC = () => {
             onBack={() => setCurrentPage('basket')}
             onMenuClick={() => setIsMenuOpen(true)}
             onUpdateQuantity={handleUpdateQuantity}
-            // "Complete purchase" proceeds to address/delivery checkout
             onCompletePurchase={() => setCurrentPage('checkout')}
           />
         );
@@ -324,7 +321,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="app">
+    // min-h-screen ensures full-height children (size-full) resolve correctly
+    <div className="app min-h-screen">
       {renderPage()}
       {showAddToCart && addToCartProduct && (
         <AddToCartOverlay
