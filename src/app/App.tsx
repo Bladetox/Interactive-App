@@ -230,7 +230,7 @@ const App: React.FC = () => {
             onBack={() => setCurrentPage('list')}
             onAddToCart={handleAddToCart}
             cartCount={cartCount}
-            onBasketClick={() => setCurrentPage('basket')}
+            onCartClick={() => setCurrentPage('basket')}
             onMenuClick={() => setIsMenuOpen(true)}
           />
         ) : null;

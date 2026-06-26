@@ -3,21 +3,23 @@ import svgPaths from "../imports/svg-42raqsyfh4";
 import footerSvgPaths from "../imports/svg-ved004mhkj";
 import clsx from "clsx";
 
+interface Product {
+  id: number;
+  name: string;
+  price: string;
+  priceValue: number;
+  farm: string;
+  images: string[];
+  description: string;
+  location: string;
+  dietary: string[];
+}
+
 interface ProductDetailPageProps {
-  product: {
-    id: number;
-    name: string;
-    price: string;
-    priceValue: number;
-    farm: string;
-    images: string[];
-    description: string;
-    location: string;
-    dietary: string[];
-  };
+  product: Product;
   cartCount: number;
   onBack: () => void;
-  onAddToCart: (quantity: number) => void;
+  onAddToCart: (product: Product, quantity: number) => void;
   onMenuClick: () => void;
   onCartClick: () => void;
 }
@@ -35,7 +37,7 @@ export default function ProductDetailPage({
   const [showQuantityDropdown, setShowQuantityDropdown] = useState(false);
 
   const handleAddToCart = () => {
-    onAddToCart(quantity);
+    onAddToCart(product, quantity);
   };
 
   const handleQuantitySelect = (newQuantity: number) => {
