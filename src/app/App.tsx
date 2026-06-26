@@ -10,7 +10,6 @@ import imgRectangle6545 from "./assests/464f20b81f02057b5cc69adbc19fb20af709c271
 import imgRectangle6546 from "./assests/365c8fc0f53d1bc2bad0988227099e87b4730cbc.png";
 import imgRectangle6547 from "./assests/f286a5e73a18e796afd61d7b68c51addff2c69b6.png";
 
-// Import all page components
 import ProductListPage from './figma/ProductListPage';
 import ProductDetailPage from './figma/ProductDetailPage';
 import BasketPage from './components/BasketPage';
@@ -21,8 +20,8 @@ import OrderConfirmationPage from './figma/OrderConfirmationPage';
 import PlaceholderPage from './figma/PlaceholderPage';
 import AddToCartOverlay from './components/AddToCartOverlay';
 import Menu from './figma/Menu';
+import { DEFAULT_DELIVERY, DeliveryOption } from './shared/deliveryTypes';
 
-// Enhanced product data with descriptions and locations
 const PRODUCTS = [
   {
     id: 1,
@@ -157,6 +156,8 @@ const App: React.FC = () => {
   const [addToCartProduct, setAddToCartProduct] = useState<typeof PRODUCTS[0] | null>(null);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // Delivery selection is lifted here so CheckoutPage and PaymentPage share the same value
+  const [selectedDelivery, setSelectedDelivery] = useState<DeliveryOption>(DEFAULT_DELIVERY);
 
   const cartCount = useMemo(() => cart.reduce((sum, item) => sum + item.quantity, 0), [cart]);
   const cartTotal = useMemo(() => cart.reduce((sum, item) => sum + item.product.priceValue * item.quantity, 0), [cart]);
@@ -206,6 +207,7 @@ const App: React.FC = () => {
   const handleOrderComplete = (order: Order) => {
     setCompletedOrder(order);
     setCart([]);
+    setSelectedDelivery(DEFAULT_DELIVERY); // reset delivery selection after order
     setCurrentPage('orderConfirmation');
   };
 
@@ -253,6 +255,8 @@ const App: React.FC = () => {
             onBack={() => setCurrentPage('basket')}
             onContinue={() => setCurrentPage('payment')}
             onMenuClick={() => setIsMenuOpen(true)}
+            selectedDelivery={selectedDelivery}
+            onDeliveryChange={setSelectedDelivery}
           />
         );
       case 'payment':
@@ -260,6 +264,7 @@ const App: React.FC = () => {
           <PaymentPage
             items={cart}
             cartTotal={cartTotal}
+            selectedDelivery={selectedDelivery}
             onBack={() => setCurrentPage('checkout')}
             onOrderComplete={handleOrderComplete}
             onMenuClick={() => setIsMenuOpen(true)}

@@ -1,28 +1,39 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Menu } from 'lucide-react';
 import { Input } from '../ui/input';
+import { DeliveryOption } from '../shared/deliveryTypes';
 
 interface PaymentPageProps {
   items: { product: { name: string; price: string; priceValue: number; images: string[] }; quantity: number }[];
   cartTotal: number;
+  selectedDelivery: DeliveryOption;
   onBack: () => void;
   onOrderComplete: (order: any) => void;
   onMenuClick: () => void;
 }
 
-const PaymentPage: React.FC<PaymentPageProps> = ({ items, cartTotal, onBack, onOrderComplete, onMenuClick }) => {
+const PaymentPage: React.FC<PaymentPageProps> = ({
+  items,
+  cartTotal,
+  selectedDelivery,
+  onBack,
+  onOrderComplete,
+  onMenuClick,
+}) => {
   const [cardNumber, setCardNumber] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvv, setCvv] = useState('');
   const [name, setName] = useState('');
 
+  const orderTotal = cartTotal + selectedDelivery.fee;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onOrderComplete({
       items,
-      total: cartTotal + 3.99,
-      deliveryMethod: 'Standard Delivery',
-      deliveryTime: '2-4 hours',
+      total: orderTotal,
+      deliveryMethod: `${selectedDelivery.label} Delivery`,
+      deliveryTime: selectedDelivery.time,
     });
   };
 
@@ -64,12 +75,12 @@ const PaymentPage: React.FC<PaymentPageProps> = ({ items, cartTotal, onBack, onO
             <span>${cartTotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">Delivery</span>
-            <span>$3.99</span>
+            <span className="text-gray-500">{selectedDelivery.label} Delivery</span>
+            <span>{selectedDelivery.feeLabel}</span>
           </div>
           <div className="flex justify-between font-semibold">
             <span>Total</span>
-            <span>${(cartTotal + 3.99).toFixed(2)}</span>
+            <span>${orderTotal.toFixed(2)}</span>
           </div>
         </div>
 
